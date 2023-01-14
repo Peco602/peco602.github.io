@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Enumeration | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/enumeration/</link><atom:link href="https://www.peco602.com/tag/enumeration/index.xml" rel="self" type="application/rss+xml"/><description>Enumeration</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Sun, 17 Jul 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Enumeration</title><link>https://www.peco602.com/tag/enumeration/</link></image><item><title>Domain Enumeration Cheatsheet</title><link>https://www.peco602.com/post/0000-domain-enumeration-cheatsheet/</link><pubDate>Sun, 17 Jul 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0000-domain-enumeration-cheatsheet/</guid><description>&lt;h2 id="module-import">Module Import&lt;/h2>
+&lt;p>Load the PowerView module:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="n">powershell&lt;/span> &lt;span class="n">-ep&lt;/span> &lt;span class="n">bypass&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">.&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">PowerView&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or the ActiveDirectory module (to use ActiveDirectory module without installing RSAT, we can use Import-Module for the valid ActiveDirectory module DLL):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">Microsoft&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ActiveDirectory&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">Management&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">dll&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">ActiveDirectory&lt;/span>&lt;span class="p">\&lt;/span>&lt;span class="n">ActiveDirectory&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psd1&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It works also in case of ConstrainedLanguage Mode:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$ExecutionContext&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">SessionState&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">LanguageMode&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="basic-enumeration">Basic Enumeration&lt;/h2>
+&lt;p>Get current domain or trusted domain objects:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomain&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomain&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Get domain NetBios name&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">gwmi &lt;/span>&lt;span class="n">Win32_NTDomain&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">DomainName&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADDomain&lt;/span> &lt;span class="n">-Identiy&lt;/span> &lt;span class="s2">&amp;#34;cyberlab.cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADDomain&lt;/span> &lt;span class="n">-Identiy&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get domain SID for the current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainSID&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-ADDomain&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">DomainSID&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get domain policy for the current domain or for a trusted domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainPolicy&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-DomainPolicy&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="s2">&amp;#34;System Access&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-DomainPolicy&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="s2">&amp;#34;Kerberos Policy&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-DomainPolicy&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="s2">&amp;#34;System Access&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-DomainPolicy&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="s2">&amp;#34;Kerberos Policy&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get Domain Controllers for the current or for a trusted domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomainController&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomainController&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADDomainController&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADDomainController&lt;/span> &lt;span class="n">-DomainName&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span> &lt;span class="n">-Discover&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get the list of users in the current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">-ExpandProperty&lt;/span> &lt;span class="n">samaccountname&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">samaccountname&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">description&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">logoncount&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">pwdlastset&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">-ExpandProperty&lt;/span> &lt;span class="n">samaccountname&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">:cmd.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net user /domain
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net user &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> /domain
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get list of all properties for users in the current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-UserProperty&lt;/span> &lt;span class="c"># All properties&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-UserProperty&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="s2">&amp;#34;pwdlastset&amp;#34;&lt;/span> &lt;span class="c"># Only pwdlastset property&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">-First&lt;/span> &lt;span class="mf">1&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-Member&lt;/span> &lt;span class="n">-MemberType&lt;/span> &lt;span class="n">Property&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Name&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="vm">@&lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="n">expression&lt;/span>&lt;span class="p">={[&lt;/span>&lt;span class="no">datetime&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">fromFileTime&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">pwdlastset&lt;/span>&lt;span class="p">)}}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Search for a particular string in a users&amp;rsquo; attribute:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-UserField&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-UserField&lt;/span> &lt;span class="n">-SearchField&lt;/span> &lt;span class="s2">&amp;#34;Description&amp;#34;&lt;/span> &lt;span class="n">-SearchTerm&lt;/span> &lt;span class="s2">&amp;#34;built&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADUser&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="s1">&amp;#39;Description -like &amp;#34;*built*&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">Description&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">Description&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get a list of computers in the current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-OperatingSystem&lt;/span> &lt;span class="s2">&amp;#34;*Server 2016*&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-Ping&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-FullData&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Get computer IPs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nv">$ip&lt;/span>&lt;span class="p">=[&lt;/span>&lt;span class="no">System.Net.Dns&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">GetHostAddresses&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">IPAddressToString&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">Write-Host&lt;/span> &lt;span class="nv">$name&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">`t&lt;/span>&lt;span class="s2"> : &amp;#34;&lt;/span> &lt;span class="nv">$ip&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADComputer&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Name&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADComputer&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="s1">&amp;#39;OperatingSystem -like &amp;#34;*Server 2016*&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">OperatingSystem&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">OperatingSystem&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADComputer&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">DNSHostName&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">Test-Connection&lt;/span> &lt;span class="n">-Count&lt;/span> &lt;span class="mf">1&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">DNSHostName&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADComputer&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Search for a particular string in a computer attribute:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-ComputerField&lt;/span> &lt;span class="n">-SearchField&lt;/span> &lt;span class="s2">&amp;#34;OperatingSystem&amp;#34;&lt;/span> &lt;span class="n">-SearchTerm&lt;/span> &lt;span class="s2">&amp;#34;windows&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADComputer&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="s1">&amp;#39;Description -like &amp;#34;*built*&amp;#34;&amp;#39;&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="n">Description&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">Description&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get groups in the current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroup&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroup&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Domain Admins&amp;#34;&lt;/span> &lt;span class="n">-FullData&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroup&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Enterprise Admins&amp;#34;&lt;/span> &lt;span class="n">-FullData&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroup&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;*admin*&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADGroup&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADGroup&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="s1">&amp;#39;Name -like &amp;#34;*admin*&amp;#34;&amp;#39;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Name&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">:cmd.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net group /domain
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net group &lt;span class="s2">&amp;#34;Domain Admins&amp;#34;&lt;/span> /domain
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get all the members of a group:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroupMember&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Domain Admins&amp;#34;&lt;/span> &lt;span class="n">-Recurse&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroupMember&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Enterprise Admins&amp;#34;&lt;/span> &lt;span class="n">-Recurse&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADGroupMember&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;Domain Admins&amp;#34;&lt;/span> &lt;span class="n">-Recursive&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADGroupMember&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;Enterprise Admins&amp;#34;&lt;/span> &lt;span class="n">-Recursive&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get the group membership for a user:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroup&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADPrincipalGroupMembership&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get local groups on localhost or an specified computer (need local admin rights on the target):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetLocalGroup&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetLocalGroup&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetLocalGroup&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span> &lt;span class="n">-ListGroups&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetLocalGroup&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Remote Desktop Users&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-batch" data-lang="batch">&lt;span class="line">&lt;span class="cl">&lt;span class="p">:&lt;/span>&lt;span class="c1">: cmd.exe&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">net localgroup
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get all effective local/domain users/groups that can access the machine with local administrative privileges:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetLocalGroup&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span> &lt;span class="n">-Recurse&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get currently logged users on a computer (need local admin rights on the target):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetLoggedon&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get active sessions on the host:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetSession&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get currently locally logged users on a computer (need remote registry - default in server OS):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-LoggedOnLocal&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-LoggedOnLocal&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get the last logged user on a computer (need local admin rights on the target):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-LastLoggedOn&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>List RDP sessions inside a computer (need local admin rights on the target):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetRDPSession&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find shares on host in current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ShareFinder&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ShareFinder&lt;/span> &lt;span class="n">-ExcludeStandard&lt;/span> &lt;span class="n">-ExcludePrint&lt;/span> &lt;span class="n">-ExcludeIPC&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Check if the share is accessible&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ShareFinder&lt;/span> &lt;span class="n">-CheckShareAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find senstive files on computers in the domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-FileFinder&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get all fileservers of the domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetFileServer&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get list of GPO in current domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">displayname&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">whencreated&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span> &lt;span class="n">-GPOname&lt;/span> &lt;span class="s2">&amp;#34;{AB306569-220D-43FF-B03B83E8F4EF8081}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>GPO files are stored in the SYSVOL path:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">cd &lt;/span>&lt;span class="s2">&amp;#34;\\cyberlab.local\sysvol\cyberlab.local\Policies\{603ABE02-C554-49B1-A462-2FF89BC61CB2}&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>and can be easily analized by using the tool &lt;em>Registry.Pol Reader&lt;/em>. It is necessary to copy the folder to the local machine and then open the file &lt;em>registry.pol&lt;/em> in the aforementioned tool. In case it is possible to install such tool on a machine in the analyzed domain, it can automatically capture and show all the policies.&lt;/p>
+&lt;p>Get GPO(s) which use Restricted Groups or groups.xml for interesting users:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPOGroup&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get users/groups which are in a local group of a machine using GPO correlation (this command analyzes the GPO applied to the OU to which the computer belongs):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOComputerAdmin&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1.cyberlab.local&amp;#34;&lt;/span> &lt;span class="c"># Default group: Local Administrators&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOComputerAdmin&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1.cyberlab.local&amp;#34;&lt;/span> &lt;span class="n">-LocalGroup&lt;/span> &lt;span class="s2">&amp;#34;Remote Desktop Users&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOComputerAdmin&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1.cyberlab.local&amp;#34;&lt;/span> &lt;span class="n">-Recurse&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">ComputerName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ObjectName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">GPODisplayName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">isGroup&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOComputerAdmin&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1.cyberlab.local&amp;#34;&lt;/span> &lt;span class="n">-Recurse&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IsGroup&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="vm">$true&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOComputerAdmin&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER1.cyberlab.local&amp;#34;&lt;/span> &lt;span class="n">-Recurse&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IsGroup&lt;/span> &lt;span class="o">-ne&lt;/span> &lt;span class="vm">$true&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">ComputerName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ObjectName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">GPODisplayName&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get machines where the given user is member of a specific group using GPO correlation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOLocation&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cyberlab.local&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="c"># Default group: Local administrators&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOLocation&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cyberlab.local&amp;#34;&lt;/span> &lt;span class="n">-LocalGroup&lt;/span> &lt;span class="s2">&amp;#34;Remote Desktop Users&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-GPOLocation&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cyberlab.local&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">ComputerName&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get OUs in a domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetOU&lt;/span> &lt;span class="n">-FullData&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetOU&lt;/span> &lt;span class="n">-FullData&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">gplink&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## List all the computers in all OUs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetOU&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">echo &lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-ADSPath&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">echo &lt;/span>&lt;span class="s2">&amp;#34;---&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## List all the computers in an OU&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetOU&lt;/span> &lt;span class="s2">&amp;#34;*student*&amp;#34;&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-ADSPath&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Enumerate all GPOs applied to an OU&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetOU&lt;/span> &lt;span class="p">*&lt;/span>&lt;span class="n">student&lt;/span>&lt;span class="p">*&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-ADSPath&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span> &lt;span class="n">-ADSpath&lt;/span> &lt;span class="s1">&amp;#39;LDAP://cn={5BA02DB5-FC5E-4A57-A310-0B1600456CC7},cn=policies,cn=system,DC=cyberlab,DC=local&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADOrganizationalUnit&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">-Properties&lt;/span> &lt;span class="p">*&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="access-control-lists-acl">Access Control Lists (ACL)&lt;/h2>
+&lt;p>&lt;strong>ACL Entities&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Name&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>SID&lt;/td>
+&lt;td>Security IDentifier&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DACL&lt;/td>
+&lt;td>Discretionary Access Control List&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ACE&lt;/td>
+&lt;td>Access Control Entry (contained in DACL)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SACL&lt;/td>
+&lt;td>Security Access Control List (LOGS)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;p>&lt;strong>ACE Structure&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Name&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>IdentityReference&lt;/td>
+&lt;td>Subject&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ActiveDirectoryRights&lt;/td>
+&lt;td>Privileges assigned to IdentityReference in relation to ObjectDN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ObjectDN&lt;/td>
+&lt;td>Target Object&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;strong>IdentityReference&lt;/strong> can &lt;strong>ActiveDirectoryRights&lt;/strong> on &lt;strong>ObjectDN&lt;/strong>&lt;/p>
+&lt;hr>
+&lt;p>&lt;strong>ActiveDirectoryRights&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Name&lt;/th>
+&lt;th>Value&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>AccessSystemSecurity&lt;/td>
+&lt;td>16777216&lt;/td>
+&lt;td>The right to get or set the SACL in the object security descriptor.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>CreateChild&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>The right to create children of the object.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Delete&lt;/td>
+&lt;td>65536&lt;/td>
+&lt;td>The right to delete the object.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DeleteChild&lt;/td>
+&lt;td>2&lt;/td>
+&lt;td>The right to delete children of the object.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DeleteTree&lt;/td>
+&lt;td>64&lt;/td>
+&lt;td>The right to delete all children of this object, regardless of the permissions of the children.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ExtendedRight&lt;/td>
+&lt;td>256&lt;/td>
+&lt;td>A customized control access right. For a list of possible extended rights, see the topic &amp;ldquo;Extended Rights&amp;rdquo; in the MSDN Library at &lt;a href="http://msdn.microsoft.com" target="_blank" rel="noopener">http://msdn.microsoft.com&lt;/a>. For more information about extended rights, see the topic &amp;ldquo;Control Access Rights&amp;rdquo; in the MSDN Library at &lt;a href="http://msdn.microsoft.com" target="_blank" rel="noopener">http://msdn.microsoft.com&lt;/a>. [AllExtendedRights - ability to add user to a group or reset password]&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ForceChangePassword&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>Ability to change user&amp;rsquo;s password&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GenericAll&lt;/td>
+&lt;td>983551&lt;/td>
+&lt;td>The right to create or delete children, delete a subtree, read and write properties, examine children and the object itself, add and remove the object from the directory, and read or write with an extended right. [full rights to the object (add users to a group or reset user&amp;rsquo;s password)]&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GenericExecute&lt;/td>
+&lt;td>131076&lt;/td>
+&lt;td>The right to read permissions on, and list the contents of, a container object.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GenericRead&lt;/td>
+&lt;td>131220&lt;/td>
+&lt;td>The right to read permissions on this object, read all the properties on this object, list this object name when the parent container is listed, and list the contents of this object if it is a container.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GenericWrite&lt;/td>
+&lt;td>131112&lt;/td>
+&lt;td>The right to read permissions on this object, write all the properties on this object, and perform all validated writes to this object. [update object&amp;rsquo;s attributes (i.e logon script)]&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ListChildren&lt;/td>
+&lt;td>4&lt;/td>
+&lt;td>The right to list children of this object. For more information about this right, see the topic &amp;ldquo;Controlling Object Visibility&amp;rdquo; in the MSDN Library &lt;a href="http://msdn.microsoft.com/library" target="_blank" rel="noopener">http://msdn.microsoft.com/library&lt;/a>.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ListObject&lt;/td>
+&lt;td>128&lt;/td>
+&lt;td>The right to list a particular object. For more information about this right, see the topic &amp;ldquo;Controlling Object Visibility&amp;rdquo; in the MSDN Library at &lt;a href="http://msdn.microsoft.com/library" target="_blank" rel="noopener">http://msdn.microsoft.com/library&lt;/a>.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ReadControl&lt;/td>
+&lt;td>131072&lt;/td>
+&lt;td>The right to read data from the security descriptor of the object, not including the data in the SACL.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ReadProperty&lt;/td>
+&lt;td>16&lt;/td>
+&lt;td>The right to read properties of the object.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Self&lt;/td>
+&lt;td>8&lt;/td>
+&lt;td>The right to perform an operation that is controlled by a validated write access right. [ability to add yourself to a group]&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Synchronize&lt;/td>
+&lt;td>1048576&lt;/td>
+&lt;td>The right to use the object for synchronization. This right enables a thread to wait until that object is in the signaled state.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WriteDacl&lt;/td>
+&lt;td>262144&lt;/td>
+&lt;td>The right to modify the DACL in the object security descriptor. [modify object&amp;rsquo;s ACEs and give attacker full control right over the object]&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WriteOwner&lt;/td>
+&lt;td>524288&lt;/td>
+&lt;td>The right to assume ownership of the object. The user must be an object trustee. The user cannot transfer the ownership to other users. [change object owner to attacker controlled user take over the object]&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>WriteProperty&lt;/td>
+&lt;td>32&lt;/td>
+&lt;td>The right to write properties of the object.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Get the ACLs associated with the specified SamAccountName (ObjectDN - Target object):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-SamAccountName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-SamAccountName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">IdentityReference&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ActiveDirectoryRights&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-SamAccountName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ActiveDirectoryRights&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="s2">&amp;#34;GenericAll&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-SamAccountName&lt;/span> &lt;span class="s2">&amp;#34;Domain Admins&amp;#34;&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get the ACLs associated with the specified target AD prefix or path (ObjectDN - Target object):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-ADSprefix&lt;/span> &lt;span class="s2">&amp;#34;CN=Administrator,CN=Users&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-ADSprefix&lt;/span> &lt;span class="s2">&amp;#34;CN=FirstName LastName,CN=Users&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-ADSpath&lt;/span> &lt;span class="s2">&amp;#34;CN=FirstName LastName,CN=Users,DC=cyberlab,DC=cybercorp,DC=local&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-Acl&lt;/span> &lt;span class="s2">&amp;#34;AD:\CN=Administrator,CN=Users,DC=cyberlab,DC=cybercorp,DC=local&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">Access&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get the ACLs associated with the specified target LDAP path (ObjectDN - Target object):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-ADSpath&lt;/span> &lt;span class="s2">&amp;#34;LDAP://CN=Domain Admins,CN=Users,DC=cyberlab,DC=cybercorp,DC=local&amp;#34;&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get the ACLs associated to all the GPOs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Enumerate those GPOs where a particular user has interesting permissions&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">Get-ObjectAcl&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="n">-Name&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Name&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentityReference&lt;/span> &lt;span class="o">-match&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Search for interesting ACEs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">IdentityReference&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ActiveDirectoryRights&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ObjectDN&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ActiveDirectoryRights&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="s2">&amp;#34;GenericAll&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">IdentityReference&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ActiveDirectoryRights&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ObjectDN&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Check if a particular user has interesting permissions&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">IdentityReference&lt;/span> &lt;span class="o">-match&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get the ACLs associated with the specified file path:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-PathAcl&lt;/span> &lt;span class="n">-Path&lt;/span> &lt;span class="s2">&amp;#34;\\cyberlab-dc.cyberlab.cybercorp.local\SYSVOL&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-PathAcl&lt;/span> &lt;span class="n">-Path&lt;/span> &lt;span class="s2">&amp;#34;\\COMPUTER1.cyberlab.cybercorp.local\C$&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="trusts-and-forests">Trusts and Forests&lt;/h2>
+&lt;p>&lt;strong>Trust directions&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Direction&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Bidirectional&lt;/td>
+&lt;td>Two-way&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Unidirectional&lt;/td>
+&lt;td>One-way&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;p>&lt;strong>Trust transitivity&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Transitivity&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Transitive&lt;/td>
+&lt;td>Can be extended to other domains in the forest&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Nontransititve&lt;/td>
+&lt;td>Cannot be extended to other domains in the forest&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;p>&lt;strong>Trust Type&lt;/strong>&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Name&lt;/th>
+&lt;th>Type&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Parent-child&lt;/td>
+&lt;td>Automatic&lt;/td>
+&lt;td>Automatically created between the new domain and the domain that precedes it in the namespace hierarchy whenever a new domain is added to a tree (always two-way transitive)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Tree-root&lt;/td>
+&lt;td>Automatic&lt;/td>
+&lt;td>Automatically created whenever a new domain tree is added to a forest root (always two-way transitive)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>External&lt;/td>
+&lt;td>Established&lt;/td>
+&lt;td>Two domains in different forests when forests do not have a trust relationship (one-way or two-way and nontransitive)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Shortcut&lt;/td>
+&lt;td>Established&lt;/td>
+&lt;td>Used to reduce access times in complex trust scenarios (one-way or two-way)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Forest&lt;/td>
+&lt;td>Established&lt;/td>
+&lt;td>Between forest root domains (one-way or two-way and transitive, if specified, or nontransitive)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;hr>
+&lt;p>Get a list of all domain trusts for the current or a trusted domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomainTrust&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADTrust&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="s1">&amp;#39;msDS-TrustForestTrustInfo -ne &amp;#34;$null&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADTrust&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get detail about the current or a trusted forest:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForest&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForest&lt;/span> &lt;span class="n">-Forest&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADForest&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADForest&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get all domains in the current or in a trusted forest:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span> &lt;span class="n">-Forest&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-ADForest&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">Domains&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Get all global catalogs for the current or a trusted forest:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestCatalog&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestCatalog&lt;/span> &lt;span class="n">-Forest&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADForest&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">-ExpandProperty&lt;/span> &lt;span class="n">GlobalCatalogs&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Map trusts of a forest:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestTrust&lt;/span> &lt;span class="n">-Forest&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># ActiveDirectory Module&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-ADTrust&lt;/span> &lt;span class="n">-Filter&lt;/span> &lt;span class="s1">&amp;#39;msDS-TrustForestTrustInfo -ne &amp;#34;$null&amp;#34;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Map all the trusts of the domains in the current or in a trusted forest:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-NetDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span> &lt;span class="n">-Forest&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-NetDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## List only external trusts&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-NetDomainTrust&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">?{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">TrustType&lt;/span> &lt;span class="o">-eq&lt;/span> &lt;span class="s1">&amp;#39;External&amp;#39;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## List all trusts of a trusting forest&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span> &lt;span class="n">-Forest&lt;/span> &lt;span class="s2">&amp;#34;evilcorp.local&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="n">GetNetDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Try to build a relational mapping of all domain trusts:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-MapDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="user-hunting">User Hunting&lt;/h2>
+&lt;p>Find all machines on the current/trusted domain where the current user has local admin access:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-LocalAdminAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-LocalAdminAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-NoPing&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-LocalAdminAccess&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cybercorp.local&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Find-WMILocalAdminAccess.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-WMILocalAdminAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="n">cyberlab&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">targets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-WMILocalAdminAccess&lt;/span> &lt;span class="n">-ComputerFile&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">targets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Find-PSRemotingLocalAdminAccess.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-PSRemotingLocalAdminAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="n">cyberlab&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">targets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-PSRemotingLocalAdminAccess&lt;/span> &lt;span class="n">-ComputerFile&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">targets&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">txt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Find-PSRemotingLocalAdminAccessCreds.ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-PSRemotingLocalAdminAccessCreds&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;STUDENT01&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password123.&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find local admins on all machines of the domain (needs administrator privs on non-dc machines):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-EnumerateLocalAdmin&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-EnumerateLocalAdmin&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-NoPing&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-EnumerateLocalAdmin&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">ComputerName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">AccountName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">IsGroup&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find computers where a domain admin (or specific user/group) has sessions:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="c"># Domain Admins&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">invoke-UserHunter&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">UserDomain&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">UserName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ComputerName&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">SessionFromName&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Remote Desktop Users&amp;#34;&lt;/span> &lt;span class="c"># Specific group&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="s2">&amp;#34;cyberlab.local&amp;#34;&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;STUDENT1&amp;#34;&lt;/span> &lt;span class="c"># Specific user&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="n">-ComputerName&lt;/span> &lt;span class="s2">&amp;#34;COMPUTER01&amp;#34;&lt;/span> &lt;span class="n">-Poll&lt;/span> &lt;span class="mf">100&lt;/span> &lt;span class="n">-UserName&lt;/span> &lt;span class="s2">&amp;#34;Administrator&amp;#34;&lt;/span> &lt;span class="n">-Delay&lt;/span> &lt;span class="mf">5&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find computers where a domain admin is logged into and checks if the local user has local administrator access:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="n">-CheckAccess&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Find computers where a domain admin is logged-in without sending queries to DCs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="c"># PowerView&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="n">-Stealth&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="bloodhound">Bloodhound&lt;/h2>
+&lt;p>Commands to be run on a Linux machine to run Bloodhound analyzer:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">apt-get install bloodhound
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">neo4j console
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bloodhound
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Commands to be run on a domain machine to analyze the domain:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">.&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">SharpHound&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Gather data and information about the current domain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-BloodHound&lt;/span> &lt;span class="n">-CollectionMethod&lt;/span> &lt;span class="n">All&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-JSONFolder&lt;/span> &lt;span class="s2">&amp;#34;c:\experiments\bloodhound&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-BloodHound&lt;/span> &lt;span class="n">-CollectionMethod&lt;/span> &lt;span class="n">All&lt;/span> &lt;span class="n">-ExcludeDC&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-JSONFolder&lt;/span> &lt;span class="s2">&amp;#34;c:\experiments\bloodhound&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c">## Gather information about established sessions&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">InvokeBloodHound&lt;/span> &lt;span class="n">-CollectionMethod&lt;/span> &lt;span class="n">LoggedOn&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="full-enumeration-sequence">Full Enumeration Sequence&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="p">.&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">PowerView&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">ps1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainSid&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForest&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-NetDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetForestTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-MapDomainTrust&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Execute domain analysis for all domain of interest&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">(&lt;/span>&lt;span class="nb">gwmi &lt;/span>&lt;span class="n">Win32_NTDomain&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="py">DomainName&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainSid&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetDomainController&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-FullData&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">operatingsystem&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">description&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="p">=&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nv">$ip&lt;/span>&lt;span class="p">=[&lt;/span>&lt;span class="no">System.Net.Dns&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">GetHostAddresses&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nv">$name&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">IPAddressToString&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">Write-Host&lt;/span> &lt;span class="nv">$name&lt;/span> &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="se">`t&lt;/span>&lt;span class="s2"> : &amp;#34;&lt;/span> &lt;span class="nv">$ip&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetOU&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetOU&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">echo &lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-ADSPath&lt;/span> &lt;span class="nv">$_&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">echo &lt;/span>&lt;span class="s2">&amp;#34;---&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">samaccountname&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">description&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">where &lt;/span>&lt;span class="p">{&lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mail&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-UserField&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-ComputerField&lt;/span> &lt;span class="n">-SearchField&lt;/span> &lt;span class="s2">&amp;#34;OperatingSystem&amp;#34;&lt;/span> &lt;span class="n">-SearchTerm&lt;/span> &lt;span class="s2">&amp;#34;windows&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroup&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Domain Admins&amp;#34;&lt;/span> &lt;span class="n">-FullData&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroupMember&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Domain Admins&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroup&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Enterprise Admins&amp;#34;&lt;/span> &lt;span class="n">-FullData&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGroupMember&lt;/span> &lt;span class="n">-GroupName&lt;/span> &lt;span class="s2">&amp;#34;Enterprise Admins&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPO&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetGPOGroup&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetFileServer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ShareFinder&lt;/span> &lt;span class="n">-ExcludeStandard&lt;/span> &lt;span class="n">-ExcludeIPC&lt;/span> &lt;span class="n">-ExcludePrint&lt;/span> &lt;span class="n">-CheckShareAccess&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-ACLScanner&lt;/span> &lt;span class="n">-ResolveGUIDs&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">select &lt;/span>&lt;span class="n">IdentityReference&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ActiveDirectoryRights&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">ObjectDN&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">ft
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Start to move laterally/escalate privileges&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-LocalAdminAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-NoPing&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-WMILocalAdminAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-PSRemotingLocalAdminAccess&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Find-PSRemotingLocalAdminAccessCreds&lt;/span> &lt;span class="n">-Username&lt;/span> &lt;span class="s2">&amp;#34;STUDENT01&amp;#34;&lt;/span> &lt;span class="n">-Password&lt;/span> &lt;span class="s2">&amp;#34;Password123.&amp;#34;&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># User Hunting (default: Domain Admins)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-UserHunter&lt;/span> &lt;span class="n">-CheckAccess&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Port Scanning (PowerSploit)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Portscan&lt;/span> &lt;span class="n">-Hosts&lt;/span> &lt;span class="vm">@&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">Get-NetComputer&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">-TopPorts&lt;/span> &lt;span class="mf">100&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="p">%{&lt;/span>&lt;span class="nb">echo &lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">Hostname&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">echo &lt;/span>&lt;span class="s2">&amp;#34;--- OPEN ---&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">echo &lt;/span>&lt;span class="nv">$_&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">openPorts&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">echo &lt;/span>&lt;span class="s2">&amp;#34;------------&amp;#34;&lt;/span>&lt;span class="p">;&lt;/span> &lt;span class="nb">echo &lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Privilege Escalation&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetUser&lt;/span> &lt;span class="n">-SPN&lt;/span> &lt;span class="c"># Kerberoasting&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-NetComputer&lt;/span> &lt;span class="n">-Unconstrained&lt;/span> &lt;span class="c"># Unconstrained delegation&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainUser&lt;/span> &lt;span class="n">-PreauthNotRequired&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="c"># ASREPRoasting (PowerView_dev)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainUser&lt;/span> &lt;span class="n">-TrustedToAuth&lt;/span> &lt;span class="c"># Constrained delegation (user)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-DomainComputer&lt;/span> &lt;span class="n">-TrustedToAuth&lt;/span> &lt;span class="c"># Constrained delegation (computer)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c"># Look for interesting MSSQL instance&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Import-Module&lt;/span> &lt;span class="p">.\&lt;/span>&lt;span class="n">PowerUpSQL&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">psd1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLConnectionTestThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLServerInfoThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAudit&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLEscalatePriv&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item></channel></rss>
