@@ -994,7 +994,7 @@ WMI uses DCOM on port 135 (Winmgmt service) and it is not firewall and NAT frien
 &lt;li>&lt;a href="https://www.blackhat.com/docs/us-15/materials/us-15-Graeber-Abusing-Windows-Management-Instrumentation-WMI-To-Build-A-Persistent%20Asynchronous-And-Fileless-Backdoor-wp.pdf" target="_blank" rel="noopener">Abusing Windows Management Instrumentation (WMI) to Build a Persistent, Asyncronous, and Fileless Backdoor&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://cansecwest.com/slides/2015/There%27s%20Something%20about%20WMI%20-%20Chris%20Glyer.pptx" target="_blank" rel="noopener">There&amp;rsquo;s something about WMI&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.slideshare.net/AlexanderLeary/building-better-backdoors-with-wmi-derbycon-2017" target="_blank" rel="noopener">Building better backdoors with WMI&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>Microsoft SQL Server Cheatsheet</title><link>https://www.peco602.com/post/0070-mssql-cheatsheet/</link><pubDate>Thu, 22 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0070-mssql-cheatsheet/</guid><description>&lt;p>&lt;strong>What is SQL Server?&lt;/strong>&lt;/p>
+&lt;/ul></description></item><item><title>Microsoft SQL Server cheatsheet</title><link>https://www.peco602.com/post/0070-mssql-cheatsheet/</link><pubDate>Thu, 22 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0070-mssql-cheatsheet/</guid><description>&lt;p>&lt;strong>What is SQL Server?&lt;/strong>&lt;/p>
 &lt;ul>
 &lt;li>A database platform&lt;/li>
 &lt;li>A Windows application&lt;/li>
