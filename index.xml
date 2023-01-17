@@ -4011,7 +4011,52 @@ WMI uses DCOM on port 135 (Winmgmt service) and it is not firewall and NAT frien
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Get-SQLInstanceDomain&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="nb">Get-SQLServerInfoThreaded&lt;/span> &lt;span class="n">-Verbose&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLAudit&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">Invoke-SQLEscalatePriv&lt;/span> &lt;span class="n">-Verbose&lt;/span> &lt;span class="n">-Instance&lt;/span> &lt;span class="s2">&amp;#34;SQLServer1\Instance1&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item><item><title>RustHunter</title><link>https://www.peco602.com/project/0010-rusthunter/</link><pubDate>Sun, 15 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0010-rusthunter/</guid><description>&lt;p>RustHunter is a modular incident response framework to build and compare environmental baselines. It is written in Rust and uses Ansible to collect data across multiple hosts.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;hr></description></item><item><title>FindWall</title><link>https://www.peco602.com/project/0020-findwall/</link><pubDate>Fri, 20 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0020-findwall/</guid><description>&lt;h2 id="what-does-it-do">What does it do?&lt;/h2>
+&lt;p>FindWall is Python script that allows to understand if your network provider is limiting your access to the Internet by blocking any TCP/UDP port. In order to perform this check FindWall needs to connect a public VPS of your property. FindWall performs the following actions:&lt;/p>
+&lt;ol>
+&lt;li>Connects to the VPS via SSH&lt;/li>
+&lt;li>Opens a port in listening mode&lt;/li>
+&lt;li>Tries to connect to that port from the local machine&lt;/li>
+&lt;li>Closes the port&lt;/li>
+&lt;/ol>
+&lt;h2 id="how-do-you-use-it">How do you use it?&lt;/h2>
+&lt;img src="./demo.gif" width="100%"/>
+&lt;p>To use FindWall you just need an account on a public VPS. The account must have root access if you want to test ports in the range &lt;code>1-1024&lt;/code>. The root account is also required to automatically install the tool &lt;code>nc&lt;/code> to open ports.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ pip install -r requirements
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ python findwall.py --help
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">=====================================================================================
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ███████╗██╗███╗ ██╗██████╗ ██╗ ██╗ █████╗ ██╗ ██╗
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ██╔════╝██║████╗ ██║██╔══██╗██║ ██║██╔══██╗██║ ██║
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> █████╗ ██║██╔██╗ ██║██║ ██║██║ █╗ ██║███████║██║ ██║
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ██╔══╝ ██║██║╚██╗██║██║ ██║██║███╗██║██╔══██║██║ ██║
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ██║ ██║██║ ╚████║██████╔╝╚███╔███╔╝██║ ██║███████╗███████╗
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ╚═╝ ╚═╝╚═╝ ╚═══╝╚═════╝ ╚══╝╚══╝ ╚═╝ ╚═╝╚══════╝╚══════╝
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">=====================================================================================
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">usage: findwall.py [-h] --ssh-host SSH_HOST [--ssh-port SSH_PORT] --ssh-username SSH_USERNAME [--ssh-password SSH_PASSWORD] [--ask-ssh-pass] [--ssh-key SSH_KEY] --ports PORTS [--udp]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> [--threads THREADS]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Check if someone is blocking you!
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">optional arguments:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> -h, --help show this help message and exit
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --ssh-host SSH_HOST Remote host
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --ssh-port SSH_PORT Remote SSH port
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --ssh-username SSH_USERNAME
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Remote SSH username
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --ssh-password SSH_PASSWORD
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Remote SSH password
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --ask-ssh-pass Ask for remote SSH password
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --ssh-key SSH_KEY Remote SSH private key
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --ports PORTS Port range to scan (default: 1-1024)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --udp Scan in UDP
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --threads THREADS Number of threads (default: 1)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As an example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ python findwall.py --ssh-host 172.17.0.2 --ssh-port 22 --ssh-username test --ssh-password test --ports 8000-8010 --threads 3
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>RustHunter</title><link>https://www.peco602.com/project/0010-rusthunter/</link><pubDate>Sun, 15 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0010-rusthunter/</guid><description>&lt;p>RustHunter is a modular incident response framework to build and compare environmental baselines. It is written in Rust and uses Ansible to collect data across multiple hosts.&lt;/p>
 &lt;p>Due to the following features it can be also employed to perform threat hunting and incident handling:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>Multi-Platform&lt;/strong>: it is able to collect data from both Windows, Linux and macOS machines;&lt;/li>
