@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Aggressor | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/aggressor/</link><atom:link href="https://www.peco602.com/tag/aggressor/index.xml" rel="self" type="application/rss+xml"/><description>Aggressor</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Mon, 03 Jan 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Aggressor</title><link>https://www.peco602.com/tag/aggressor/</link></image><item><title>Cobalt Strike Aggressor Scripts</title><link>https://www.peco602.com/project/0010-cobaltstrike-aggressor-scripts/</link><pubDate>Mon, 03 Jan 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0010-cobaltstrike-aggressor-scripts/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>This is a collection of Cobalt Strike Aggressor scripts I developed and tested while I was a Red Team member for Locked Shields 2021.&lt;/p>
+&lt;h2 id="initial-access">Initial Access&lt;/h2>
+&lt;p>&lt;a href="https://attack.mitre.org/tactics/TA0001/" target="_blank" rel="noopener">Initial Access&lt;/a> consists of techniques that use various entry vectors to gain their initial foothold within a network.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>initial-access-cmd/initial-access-cmd.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Certutil Web Delivery (Custom)&lt;/strong>: Provides a CMD one-liner to deliver a custom executable via Certutil&lt;/li>
+&lt;li>&lt;strong>Certutil Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Certutil&lt;/li>
+&lt;li>&lt;strong>Bitsadmin Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Bitsadmin&lt;/li>
+&lt;li>&lt;strong>Regsvr32 Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Regsvr32&lt;/li>
+&lt;li>&lt;strong>MSHTA Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via MSHTA&lt;/li>
+&lt;li>&lt;strong>Rundll32 Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Rundll32&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>initial-access-powershell/initial-access-powershell.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Pure Powershell Web Delivery (Stageless)&lt;/strong>: Provides a PowerShell one-liner to deliver (in-memory) a stageless Cobalt Strike PoweShell payload&lt;/li>
+&lt;li>&lt;strong>Artifact Powershell Web Delivery (Stageless)&lt;/strong>: Provides a PowerShell one-liner to deliver (in-memory) a PowerShell scripts which embeds a stageless Cobalt Strike payload&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>initial-access-python/initial-access-python.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Python 2 Web Delivery&lt;/strong>: Provides a Python 2 one-liner to deliver a stageless Cobalt Strike payload (it assumes the following path for Python 2: &lt;em>c:\Python27\pythonw.exe&lt;/em>)&lt;/li>
+&lt;li>&lt;strong>Python 3 Web Delivery&lt;/strong>: Provides a Python 3.9 one-liner to deliver a stageless Cobalt Strike payload (it assumes the following path for Python 3.9: &lt;em>C:\Python39\pythonw.exe&lt;/em>)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="persistence">Persistence&lt;/h2>
+&lt;p>&lt;a href="https://attack.mitre.org/tactics/TA0003/" target="_blank" rel="noopener">Persistence&lt;/a> consists of techniques that adversaries use to keep access to systems across restarts, changed credentials, and other interruptions that could cut off their access.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>persistence-sharpersist/persistence-sharpersist.cna&lt;/code>:
+&lt;ul>
+&lt;li>&lt;strong>* Startup Folder (Upload executable) [Reboot]&lt;/strong>: Installs persistence for all users by uploading an executable to the startup folder [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Startup Folder (Upload executable) [Reboot]&lt;/strong>: Installs persistence for the current user by uploading an executable to the startup folder&lt;/li>
+&lt;li>&lt;strong>* Windows Service (Powershell command) [Reboot]&lt;/strong>: Installs persistence for all users by creating a Windows service launching a PowerShell command [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Windows Service (Upload executable) [Reboot]&lt;/strong>: Installs persistence for all users by uploading an executable and creating a Windows service launching it [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Scheduled Task (Powershell command) [Logon/Hourly]&lt;/strong>: Installs persistence for all users by creating a Scheduled Task launching a PowerShell command [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Scheduled Task (Upload executable) [Logon/Hourly]&lt;/strong>: Installs persistence for all users by uploading an executable and creating a Scheduled Task launching it [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Scheduled Task (Powershell command) [Logon/Hourly]&lt;/strong>: Installs persistence for the current user by creating a Scheduled Task launching a PowerShell command&lt;/li>
+&lt;li>&lt;strong>Scheduled Task (Upload executable) [Logon/Hourly]&lt;/strong>: Installs persistence for the current user by uploading an executable and creating a Scheduled Task launching it&lt;/li>
+&lt;li>&lt;strong>* Registry (Powershell command) [Logon]&lt;/strong>: Installs persistence for all users by adding a PowerShell command to an autorun registry key [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Registry (Upload executable) [Logon]&lt;/strong>: Installs persistence for all users by uploading an executable and adding it to an autorun registry key [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Registry (Powershell command) [Logon]&lt;/strong>: Installs persistence for the current user by adding a PowerShell command to an autorun registry key [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Registry (Upload executable) [Logon]&lt;/strong>: Installs persistence for the current user by uploading an executable and adding it to an autorun registry key&lt;/li>
+&lt;li>&lt;strong>* Sticky Keys (CMD)&lt;/strong>: Launches a CMD prompt in case of sticky keys or other accessibility tools (e.g., Narrator, Magnifier) execution&lt;/li>
+&lt;li>&lt;strong>* Sticky Keys (Beacon)&lt;/strong>: Launches a Cobalt Strike beacon in case of sticky keys or other accessibility tools (e.g., Narrator, Magnifier) execution&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="defense-evasion">Defense Evasion&lt;/h2>
+&lt;p>&lt;a href="https://attack.mitre.org/tactics/TA0005/" target="_blank" rel="noopener">Defense Evasion&lt;/a> consists of techniques that adversaries use to avoid detection throughout their compromise. Techniques used for defense evasion include uninstalling/disabling security software or obfuscating/encrypting data and scripts.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>evasion-disable-defender/evasion-disable-defender.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>* Disable AV/Firewall&lt;/strong>: Disables Windows Defender [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Add Exclusions (Auto)&lt;/strong>: Automatically adds a list of paths and executables to the Windows Defender exclusions [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Add Exclusions (Custom)&lt;/strong>: Adds a custom path and executable to the Windows Defender exclusions [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Add Exclusions (Extensions)&lt;/strong>: Adds a custom file extension to the Windows Defender exclusions [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Remove Definitions&lt;/strong>: Removes Windows Defender definitions [Requires administrator privileges]&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>evasion-disable-edr/evasion-disable-edr.cna&lt;/code>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>* Kill EDRs&lt;/strong>: Tries to automatically kill all EDRs/AVs [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Kill EDR (Custom)&lt;/strong>: Tries to kill a custom EDR/AV [Requires administrator privileges]&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

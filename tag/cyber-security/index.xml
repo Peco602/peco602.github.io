@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cyber Security | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/cyber-security/</link><atom:link href="https://www.peco602.com/tag/cyber-security/index.xml" rel="self" type="application/rss+xml"/><description>Cyber Security</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Fri, 20 May 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Cyber Security</title><link>https://www.peco602.com/tag/cyber-security/</link></image><item><title>FindWall</title><link>https://www.peco602.com/project/0020-findwall/</link><pubDate>Fri, 20 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0020-findwall/</guid><description>&lt;h2 id="what-does-it-do">What does it do?&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cyber Security | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/cyber-security/</link><atom:link href="https://www.peco602.com/tag/cyber-security/index.xml" rel="self" type="application/rss+xml"/><description>Cyber Security</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Fri, 20 May 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Cyber Security</title><link>https://www.peco602.com/tag/cyber-security/</link></image><item><title>FindWall</title><link>https://www.peco602.com/project/0030-findwall/</link><pubDate>Fri, 20 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0030-findwall/</guid><description>&lt;h2 id="what-does-it-do">What does it do?&lt;/h2>
 &lt;p>FindWall is Python script that allows to understand if your network provider is limiting your access to the Internet by blocking any TCP/UDP port. In order to perform this check FindWall needs to connect a public VPS of your property. FindWall performs the following actions:&lt;/p>
 &lt;ol>
 &lt;li>Connects to the VPS via SSH&lt;/li>
@@ -43,7 +43,7 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> --threads THREADS Number of threads (default: 1)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As an example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ python findwall.py --ssh-host 172.17.0.2 --ssh-port 22 --ssh-username test --ssh-password test --ports 8000-8010 --threads 3
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>RustHunter</title><link>https://www.peco602.com/project/0010-rusthunter/</link><pubDate>Sun, 15 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0010-rusthunter/</guid><description>&lt;p>RustHunter is a modular incident response framework to build and compare environmental baselines. It is written in Rust and uses Ansible to collect data across multiple hosts.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>RustHunter</title><link>https://www.peco602.com/project/0020-rusthunter/</link><pubDate>Sun, 15 May 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0020-rusthunter/</guid><description>&lt;p>RustHunter is a modular incident response framework to build and compare environmental baselines. It is written in Rust and uses Ansible to collect data across multiple hosts.&lt;/p>
 &lt;p>Due to the following features it can be also employed to perform threat hunting and incident handling:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>Multi-Platform&lt;/strong>: it is able to collect data from both Windows, Linux and macOS machines;&lt;/li>
@@ -61,7 +61,80 @@ Slides can be added in a few ways:
 - **Upload** an existing slide deck to `static/` and link using `url_slides` parameter in the front matter of the talk file
 - **Embed** your slides (e.g. Google Slides) or presentation video on this page using [shortcodes](https://wowchemy.com/docs/writing-markdown-latex/).
 Further event details, including [page elements](https://wowchemy.com/docs/writing-markdown-latex/) such as image galleries, can be added to the body of this page.
---></description></item><item><title>RedHerd Framework</title><link>https://www.peco602.com/talk/redherd-framework/</link><pubDate>Wed, 10 Nov 2021 14:00:00 +0000</pubDate><guid>https://www.peco602.com/talk/redherd-framework/</guid><description>&lt;!--
+--></description></item><item><title>Cobalt Strike Aggressor Scripts</title><link>https://www.peco602.com/project/0010-cobaltstrike-aggressor-scripts/</link><pubDate>Mon, 03 Jan 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0010-cobaltstrike-aggressor-scripts/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>This is a collection of Cobalt Strike Aggressor scripts I developed and tested while I was a Red Team member for Locked Shields 2021.&lt;/p>
+&lt;h2 id="initial-access">Initial Access&lt;/h2>
+&lt;p>&lt;a href="https://attack.mitre.org/tactics/TA0001/" target="_blank" rel="noopener">Initial Access&lt;/a> consists of techniques that use various entry vectors to gain their initial foothold within a network.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>initial-access-cmd/initial-access-cmd.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Certutil Web Delivery (Custom)&lt;/strong>: Provides a CMD one-liner to deliver a custom executable via Certutil&lt;/li>
+&lt;li>&lt;strong>Certutil Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Certutil&lt;/li>
+&lt;li>&lt;strong>Bitsadmin Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Bitsadmin&lt;/li>
+&lt;li>&lt;strong>Regsvr32 Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Regsvr32&lt;/li>
+&lt;li>&lt;strong>MSHTA Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via MSHTA&lt;/li>
+&lt;li>&lt;strong>Rundll32 Web Delivery (Stageless)&lt;/strong>: Provides a CMD one-liner to deliver a stageless Cobalt Strike payload via Rundll32&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>initial-access-powershell/initial-access-powershell.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Pure Powershell Web Delivery (Stageless)&lt;/strong>: Provides a PowerShell one-liner to deliver (in-memory) a stageless Cobalt Strike PoweShell payload&lt;/li>
+&lt;li>&lt;strong>Artifact Powershell Web Delivery (Stageless)&lt;/strong>: Provides a PowerShell one-liner to deliver (in-memory) a PowerShell scripts which embeds a stageless Cobalt Strike payload&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>initial-access-python/initial-access-python.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Python 2 Web Delivery&lt;/strong>: Provides a Python 2 one-liner to deliver a stageless Cobalt Strike payload (it assumes the following path for Python 2: &lt;em>c:\Python27\pythonw.exe&lt;/em>)&lt;/li>
+&lt;li>&lt;strong>Python 3 Web Delivery&lt;/strong>: Provides a Python 3.9 one-liner to deliver a stageless Cobalt Strike payload (it assumes the following path for Python 3.9: &lt;em>C:\Python39\pythonw.exe&lt;/em>)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="persistence">Persistence&lt;/h2>
+&lt;p>&lt;a href="https://attack.mitre.org/tactics/TA0003/" target="_blank" rel="noopener">Persistence&lt;/a> consists of techniques that adversaries use to keep access to systems across restarts, changed credentials, and other interruptions that could cut off their access.&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>persistence-sharpersist/persistence-sharpersist.cna&lt;/code>:
+&lt;ul>
+&lt;li>&lt;strong>* Startup Folder (Upload executable) [Reboot]&lt;/strong>: Installs persistence for all users by uploading an executable to the startup folder [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Startup Folder (Upload executable) [Reboot]&lt;/strong>: Installs persistence for the current user by uploading an executable to the startup folder&lt;/li>
+&lt;li>&lt;strong>* Windows Service (Powershell command) [Reboot]&lt;/strong>: Installs persistence for all users by creating a Windows service launching a PowerShell command [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Windows Service (Upload executable) [Reboot]&lt;/strong>: Installs persistence for all users by uploading an executable and creating a Windows service launching it [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Scheduled Task (Powershell command) [Logon/Hourly]&lt;/strong>: Installs persistence for all users by creating a Scheduled Task launching a PowerShell command [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Scheduled Task (Upload executable) [Logon/Hourly]&lt;/strong>: Installs persistence for all users by uploading an executable and creating a Scheduled Task launching it [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Scheduled Task (Powershell command) [Logon/Hourly]&lt;/strong>: Installs persistence for the current user by creating a Scheduled Task launching a PowerShell command&lt;/li>
+&lt;li>&lt;strong>Scheduled Task (Upload executable) [Logon/Hourly]&lt;/strong>: Installs persistence for the current user by uploading an executable and creating a Scheduled Task launching it&lt;/li>
+&lt;li>&lt;strong>* Registry (Powershell command) [Logon]&lt;/strong>: Installs persistence for all users by adding a PowerShell command to an autorun registry key [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Registry (Upload executable) [Logon]&lt;/strong>: Installs persistence for all users by uploading an executable and adding it to an autorun registry key [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Registry (Powershell command) [Logon]&lt;/strong>: Installs persistence for the current user by adding a PowerShell command to an autorun registry key [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>Registry (Upload executable) [Logon]&lt;/strong>: Installs persistence for the current user by uploading an executable and adding it to an autorun registry key&lt;/li>
+&lt;li>&lt;strong>* Sticky Keys (CMD)&lt;/strong>: Launches a CMD prompt in case of sticky keys or other accessibility tools (e.g., Narrator, Magnifier) execution&lt;/li>
+&lt;li>&lt;strong>* Sticky Keys (Beacon)&lt;/strong>: Launches a Cobalt Strike beacon in case of sticky keys or other accessibility tools (e.g., Narrator, Magnifier) execution&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="defense-evasion">Defense Evasion&lt;/h2>
+&lt;p>&lt;a href="https://attack.mitre.org/tactics/TA0005/" target="_blank" rel="noopener">Defense Evasion&lt;/a> consists of techniques that adversaries use to avoid detection throughout their compromise. Techniques used for defense evasion include uninstalling/disabling security software or obfuscating/encrypting data and scripts.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;code>evasion-disable-defender/evasion-disable-defender.cna&lt;/code>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>* Disable AV/Firewall&lt;/strong>: Disables Windows Defender [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Add Exclusions (Auto)&lt;/strong>: Automatically adds a list of paths and executables to the Windows Defender exclusions [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Add Exclusions (Custom)&lt;/strong>: Adds a custom path and executable to the Windows Defender exclusions [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Add Exclusions (Extensions)&lt;/strong>: Adds a custom file extension to the Windows Defender exclusions [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Remove Definitions&lt;/strong>: Removes Windows Defender definitions [Requires administrator privileges]&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;code>evasion-disable-edr/evasion-disable-edr.cna&lt;/code>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>* Kill EDRs&lt;/strong>: Tries to automatically kill all EDRs/AVs [Requires administrator privileges]&lt;/li>
+&lt;li>&lt;strong>* Kill EDR (Custom)&lt;/strong>: Tries to kill a custom EDR/AV [Requires administrator privileges]&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>RedHerd Framework</title><link>https://www.peco602.com/talk/redherd-framework/</link><pubDate>Wed, 10 Nov 2021 14:00:00 +0000</pubDate><guid>https://www.peco602.com/talk/redherd-framework/</guid><description>&lt;!--
 &lt;div class="alert alert-note">
 &lt;div>
 Click on the &lt;strong>Slides&lt;/strong> button above to view the built-in slides feature.
@@ -72,7 +145,9 @@ Slides can be added in a few ways:
 - **Upload** an existing slide deck to `static/` and link using `url_slides` parameter in the front matter of the talk file
 - **Embed** your slides (e.g. Google Slides) or presentation video on this page using [shortcodes](https://wowchemy.com/docs/writing-markdown-latex/).
 Further event details, including [page elements](https://wowchemy.com/docs/writing-markdown-latex/) such as image galleries, can be added to the body of this page.
---></description></item><item><title>RedHerd: Offensive Cyberspace Operations as a Service</title><link>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</link><pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate><guid>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</guid><description>&lt;!--
+--></description></item><item><title>RedHerd Framework</title><link>https://www.peco602.com/project/0000-redherd-framework/</link><pubDate>Thu, 15 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0000-redherd-framework/</guid><description>&lt;p>RedHerd is a collaborative and serverless framework for orchestrating a geographically distributed group of assets capable of conducting simulating complex offensive cyberspace operations.&lt;/p>
+&lt;iframe width="100%" height="400" src="https://www.youtube.com/embed/-AnJBcTwR8Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="margin-bottom: 30px;" allowfullscreen>&lt;/iframe>
+&lt;p>The framework takes advantage of the &amp;ldquo;as a Service&amp;rdquo; paradigm in order to deploy a ready-to-use infrastructure that can also be adopted for effective training purposes, by reliably reproducing a real-world cyberspace scenario in which red and blue teams can challenge each other. RedHerd perfectly fits the Open Systems Architecture design pattern, thanks to the adoption of both open standards and wide-spread open source software components.&lt;/p></description></item><item><title>RedHerd: Offensive Cyberspace Operations as a Service</title><link>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</link><pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate><guid>https://www.peco602.com/publication/0080-redherd-offensive-operations-service/</guid><description>&lt;!--
 &lt;div class="alert alert-note">
 &lt;div>
 Click the &lt;em>Cite&lt;/em> button above to demo the feature to enable visitors to import publication metadata into their reference management software.
@@ -96,6 +171,4 @@ Create your slides in Markdown - click the &lt;em>Slides&lt;/em> button to check
 &lt;/div>
 &lt;/div>
 Supplementary notes can be added here, including [code, math, and images](https://wowchemy.com/docs/writing-markdown-latex/).
---></description></item><item><title>RedHerd Framework</title><link>https://www.peco602.com/project/0000-redherd-framework/</link><pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0000-redherd-framework/</guid><description>&lt;p>RedHerd is a collaborative and serverless framework for orchestrating a geographically distributed group of assets capable of conducting simulating complex offensive cyberspace operations.&lt;/p>
-&lt;iframe width="100%" height="400" src="https://www.youtube.com/embed/-AnJBcTwR8Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="margin-bottom: 30px;" allowfullscreen>&lt;/iframe>
-&lt;p>The framework takes advantage of the &amp;ldquo;as a Service&amp;rdquo; paradigm in order to deploy a ready-to-use infrastructure that can also be adopted for effective training purposes, by reliably reproducing a real-world cyberspace scenario in which red and blue teams can challenge each other. RedHerd perfectly fits the Open Systems Architecture design pattern, thanks to the adoption of both open standards and wide-spread open source software components.&lt;/p></description></item></channel></rss>
+--></description></item></channel></rss>
