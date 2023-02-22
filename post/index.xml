@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts | Giovanni Pecoraro</title><link>https://www.peco602.com/post/</link><atom:link href="https://www.peco602.com/post/index.xml" rel="self" type="application/rss+xml"/><description>Posts</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 29 Sep 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Posts</title><link>https://www.peco602.com/post/</link></image><item><title>DICOM images in Python: An overview</title><link>https://www.peco602.com/post/0090-python-dicom/</link><pubDate>Thu, 29 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0090-python-dicom/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>DICOM or Digital Imaging and Communications in medicine are image files sourced from different modalities, e.g., CT or MRI scans, and based on an &lt;a href="https://www.dicomstandard.org/" target="_blank" rel="noopener">international standard&lt;/a> to transmit, store, retrieve, print, process, and display medical imaging information. DICOM files does not only contain the image, but also additional data, such as patient identifier, date of birth, age, sex, and any other useful information about the diagnosis. Several DICOM viewers are available online (a list is available &lt;a href="https://technologyadvice.com/blog/healthcare/5-dicom-viewers/" target="_blank" rel="noopener">here&lt;/a>), but Python can be very helpful in case additional processing is required.&lt;/p>
+&lt;p>DICOM or Digital Imaging and Communications in medicine are image files sourced from different modalities, e.g., CT or MRI scans, and based on an &lt;a href="https://www.dicomstandard.org/" target="_blank" rel="noopener">international standard&lt;/a> to transmit, store, retrieve, print, process, and display medical imaging information. DICOM files do not only contain the image, but also additional data, such as the patient identifier, date of birth, age, sex, and any other useful information about the diagnosis. Obviousely, DICOM files cannot be viewed as normal photos, so several DICOM viewers are available online (a list is available &lt;a href="https://technologyadvice.com/blog/healthcare/5-dicom-viewers/" target="_blank" rel="noopener">here&lt;/a>), but, as always, Python can be very powerful in case additional processing is needed.&lt;/p>
 &lt;h2 id="pre-requisites">Pre-requisites&lt;/h2>
-&lt;p>First, the following libraries are needed to import and open DICOM files in Python:&lt;/p>
+&lt;p>First, the following libraries are required:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>&lt;a href="https://pypi.org/project/pydicom/" target="_blank" rel="noopener">Pydicom&lt;/a>&lt;/strong>: DICOM files reading and decoding library&lt;/li>
 &lt;li>&lt;strong>&lt;a href="https://numpy.org/install/" target="_blank" rel="noopener">Numpy&lt;/a>&lt;/strong>: Array manipulation library&lt;/li>
 &lt;li>&lt;strong>&lt;a href="https://pypi.org/project/Pillow/2.2.2/" target="_blank" rel="noopener">Pillow&lt;/a>&lt;/strong>: Image processing library&lt;/li>
 &lt;li>&lt;strong>&lt;a href="https://matplotlib.org/stable/users/installing/index.html" target="_blank" rel="noopener">Matplotlib&lt;/a>&lt;/strong>: Image visualization library&lt;/li>
 &lt;/ul>
-&lt;p>These libraries can be easily installed via the command:&lt;/p>
+&lt;p>and can be easily installed via the command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">pip install pydicom numpy pillow matplotlib
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="data-structure">Data structure&lt;/h2>
-&lt;p>A DICOM file can be read via the &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.filereader.dcmread.html#pydicom.filereader.dcmread" target="_blank" rel="noopener">&lt;code>dcmread()&lt;/code>&lt;/a> method, which returns a &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.FileDataset.html#pydicom.dataset.FileDataset" target="_blank" rel="noopener">&lt;code>FileDataset&lt;/code>&lt;/a> instance. The &lt;code>FileDataset&lt;/code> represents an extension of &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.Dataset.html#pydicom.dataset.Dataset" target="_blank" rel="noopener">&lt;code>Dataset&lt;/code>&lt;/a> class to make reading and writing to file-like easier and wraps a dictionary of DICOM &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataelem.DataElement.html#pydicom.dataelem.DataElement" target="_blank" rel="noopener">&lt;code>DataElement&lt;/code>&lt;/a> instances:&lt;/p>
+&lt;p>Once the Python environment is ready and a DICOM file is available, it can be read via the &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.filereader.dcmread.html#pydicom.filereader.dcmread" target="_blank" rel="noopener">&lt;code>dcmread()&lt;/code>&lt;/a> method.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">pydicom&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">dcmread&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">DICOM_PATH&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;/home/user/Desktop/exam/MD44PKO2/T2T5OLJX/I7600000&amp;#39;&lt;/span>
@@ -19,7 +19,7 @@
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">type&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ds&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>pydicom.dataset.FileDataset
 &lt;/code>&lt;/pre>
-&lt;p>A &lt;code>DataElement&lt;/code> is then composed of the following parts:&lt;/p>
+&lt;p>This method returns a &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.FileDataset.html#pydicom.dataset.FileDataset" target="_blank" rel="noopener">&lt;code>FileDataset&lt;/code>&lt;/a> instance, which in turn represents an extension of &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.Dataset.html#pydicom.dataset.Dataset" target="_blank" rel="noopener">&lt;code>Dataset&lt;/code>&lt;/a> class. It makes reading and writing to file easier and wraps a dictionary of &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataelem.DataElement.html#pydicom.dataelem.DataElement" target="_blank" rel="noopener">&lt;code>DataElement&lt;/code>&lt;/a>. A &lt;code>DataElement&lt;/code> is then composed of the following parts:&lt;/p>
 &lt;ul>
 &lt;li>a &lt;code>tag&lt;/code> that identifies the attribute, usually in the format (XXXX,XXXX) with hexadecimal numbers, and may be divided further into DICOM Group Number and DICOM Element Number;&lt;/li>
 &lt;li>a &lt;code>Value Representation (VR)&lt;/code> that describes the data type and format of the attribute value.&lt;/li>
@@ -180,9 +180,9 @@ ds.InstitutionAddress = 'XXXXXXXXXX'
 (6000, 3000) Overlay Data OW: Array of 32768 elements
 (7fe0, 0010) Pixel Data OW: Array of 524288 elements
 &lt;/code>&lt;/pre>
-&lt;p>You can access specific elements by their DICOM keyword or tag number. When using the tag number directly a &lt;code>DataElement&lt;/code> instance is returned, so &lt;code>DataElement.value&lt;/code> must be used to get the value.&lt;/p>
+&lt;p>You can access specific elements by their DICOM keyword or tag number. When using the tag number, a &lt;code>DataElement&lt;/code> instance is returned, so &lt;code>DataElement.value&lt;/code> must be used to get the value.&lt;/p>
 &lt;blockquote>
-&lt;p>&lt;strong>&lt;em>NOTE:&lt;/em>&lt;/strong> Some attributes values have been redacted or replace by fake values for privacy.&lt;/p>
+&lt;p>&lt;strong>&lt;em>NOTE:&lt;/em>&lt;/strong> Some attributes values have been redacted or replaced with fake values for patient privacy.&lt;/p>
 &lt;/blockquote>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ds&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">PatientName&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>'ROSSI^MARIO'
@@ -190,7 +190,7 @@ ds.InstitutionAddress = 'XXXXXXXXXX'
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ds&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mh">0x10&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mh">0x10&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">value&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>'ROSSI^MARIO'
 &lt;/code>&lt;/pre>
-&lt;p>If you don’t remember or know the exact element tag or keyword, Dataset provides a handy Dataset.dir() method, useful during interactive sessions at the Python prompt. It will return any non-private element keywords in the dataset that have the specified string anywhere in the keyword (case insensitive).&lt;/p>
+&lt;p>If you don’t remember or know the exact element tag or keyword, the &lt;code>Dataset&lt;/code> class provides a handy &lt;code>dir()&lt;/code> method, useful during interactive sessions at the Python prompt. It will return any non-private element keywords in the dataset that have the specified string anywhere in the keyword (case insensitive).&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">ds&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dir&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;pat&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>['DistanceSourceToPatient',
 'ImageOrientationPatient',
@@ -313,7 +313,7 @@ ds.InstitutionAddress = 'XXXXXXXXXX'
 &lt;ul>
 &lt;li>The pixel values may be signed or unsigned integers, or floats&lt;/li>
 &lt;li>There may be multiple image frames&lt;/li>
-&lt;li>There may be multiple planes per frame (i.e. RGB) and the order of the pixels may be different&lt;/li>
+&lt;li>There may be multiple planes per frame (i.e., RGB) and the order of the pixels may be different&lt;/li>
 &lt;li>The image data may be encoded using one of the available compression standards (1.2.840.10008.1.2.4.50 JPEG Baseline, 1.2.840.10008.1.2.5 RLE Lossless, etc). Encoded image data will also be encapsulated and each encapsulated image frame may be broken up into one or more fragments.&lt;/li>
 &lt;/ul>
 &lt;p>Because of the complexity in interpreting the pixel data, pydicom provides an easy way to get it in a convenient form: &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.Dataset.html#pydicom.dataset.Dataset.pixel_array" target="_blank" rel="noopener">&lt;code>Dataset.pixel_array&lt;/code>&lt;/a>. As an example, if the pixel data is compressed then &lt;code>pixel_array&lt;/code> will directly return the uncompressed data.&lt;/p>
@@ -321,7 +321,7 @@ ds.InstitutionAddress = 'XXXXXXXXXX'
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">arr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ds&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pixel_array&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cmap&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bone&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7efbc6f44280&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7f5625845280&amp;gt;
 &lt;/code>&lt;/pre>
 &lt;p>
 &lt;figure >
@@ -336,7 +336,7 @@ height="418"
 loading="lazy" data-zoomable />&lt;/div>
 &lt;/div>&lt;/figure>
 &lt;/p>
-&lt;p>As it is possible to see, the picture information content is still quite poor. The following additional DICOM post-processing should be &lt;strong>sequentially&lt;/strong> performed in order to enhance the image content.&lt;/p>
+&lt;p>As it is possible to see, the picture details are not well-defined so the information content is quite poor. The following additional DICOM post-processing should be &lt;strong>sequentially&lt;/strong> performed in order to enhance the image content.&lt;/p>
 &lt;h3 id="1-color-palette">1. Color Palette&lt;/h3>
 &lt;p>Some DICOM datasets store their output image pixel values in a lookup table (LUT), where the values in Pixel Data are the index to a corresponding LUT entry. When a dataset’s (0028,0004) Photometric Interpretation value is PALETTE COLOR then the &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_color_lut" target="_blank" rel="noopener">&lt;code>apply_color_lut()&lt;/code>&lt;/a> function can be used to apply a palette color LUT to the pixel data to produce an RGB image.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">pydicom.pixel_data_handlers.util&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">apply_color_lut&lt;/span>
@@ -350,16 +350,16 @@ loading="lazy" data-zoomable />&lt;/div>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>(0028,0004) Photometric Interpretation: MONOCHROME2
 No suitable Palette Color Lookup Table Module found
 &lt;/code>&lt;/pre>
-&lt;p>The &lt;em>Photometric Interpretation&lt;/em> is &lt;em>MONOCHROME2&lt;/em>, so no suitable Palette Color Lookup Table Module is found and the &lt;code>apply_color_lut&lt;/code> method fails.&lt;/p>
+&lt;p>This was expected since the &lt;em>Photometric Interpretation&lt;/em> is &lt;em>MONOCHROME2&lt;/em>, so no suitable Palette Color Lookup Table Module could found and the &lt;code>apply_color_lut&lt;/code> method fails.&lt;/p>
 &lt;h3 id="2-modality-lut-or-rescale-operation">2. Modality LUT or Rescale Operation¶&lt;/h3>
-&lt;p>The DICOM &lt;a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.html#sect_C.11.1" target="_blank" rel="noopener">Modality LUT&lt;/a> module converts raw pixel data values to a specific (possibly unitless) physical quantity, such as Hounsfield units for CT. The &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut" target="_blank" rel="noopener">&lt;code>apply_modality_lut()&lt;/code>&lt;/a> function can be used with an input array of raw values and a dataset containing a Modality LUT module to return the converted values. When a dataset requires multiple grayscale transformations, the Modality LUT transformation is always applied first.&lt;/p>
+&lt;p>The DICOM &lt;a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.html#sect_C.11.1" target="_blank" rel="noopener">Modality LUT&lt;/a> module converts raw pixel data values to a specific (possibly unitless) physical quantity, such as Hounsfield units for CT scan (as in this case). The &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut" target="_blank" rel="noopener">&lt;code>apply_modality_lut()&lt;/code>&lt;/a> function can be used with an input array of raw values and a dataset containing a Modality LUT module to return the converted values. When a dataset requires multiple grayscale transformations, the Modality LUT transformation is always applied first.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">pydicom.pixel_data_handlers.util&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">apply_modality_lut&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">arr&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ds&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pixel_array&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hu&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">apply_modality_lut&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arr&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ds&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hu&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cmap&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bone&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7efbc4445d60&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7f5621d45d60&amp;gt;
 &lt;/code>&lt;/pre>
 &lt;p>
 &lt;figure >
@@ -384,13 +384,13 @@ loading="lazy" data-zoomable />&lt;/div>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>(-1024.0, 1311.0)
 &lt;/code>&lt;/pre>
 &lt;h3 id="3-voi-lut-or-windowing-operation">3. VOI LUT or Windowing Operation¶&lt;/h3>
-&lt;p>The DICOM &lt;a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.2.html" target="_blank" rel="noopener">VOI LUT&lt;/a> module applies a VOI or windowing operation to input values. The &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut" target="_blank" rel="noopener">&lt;code>apply_voi_lut()&lt;/code>&lt;/a> function can be used with an input array and a dataset containing a VOI LUT module to return values with applied VOI LUT or windowing. When a dataset contains multiple VOI or windowing views then a particular view can be returned by using the index keyword parameter.&lt;/p>
+&lt;p>The DICOM &lt;a href="http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.2.html" target="_blank" rel="noopener">VOI LUT&lt;/a> module applies a VOI or windowing operation to input values. The &lt;a href="https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut" target="_blank" rel="noopener">&lt;code>apply_voi_lut()&lt;/code>&lt;/a> function can be used with an input array and a dataset containing a VOI LUT module to return values with applied VOI LUT or windowing. When a dataset contains multiple VOI or windowing views then a particular view can be returned by using the index keyword parameter. In this case the index &lt;code>0&lt;/code> will be used.&lt;/p>
 &lt;p>When a dataset requires multiple grayscale transformations, then it’s assumed that the modality LUT or rescale operation has already been applied.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">pydicom.pixel_data_handlers.util&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">apply_voi_lut&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">out&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">apply_voi_lut&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hu&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">ds&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">index&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">out&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cmap&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bone&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7efbc41b9c40&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7f5621ab8c40&amp;gt;
 &lt;/code>&lt;/pre>
 &lt;p>
 &lt;figure >
@@ -405,9 +405,9 @@ height="418"
 loading="lazy" data-zoomable />&lt;/div>
 &lt;/div>&lt;/figure>
 &lt;/p>
-&lt;p>Got it! The sequence of pre-processing steps has deeply enhanced the details of the CT scan contained in the DICOM file. The image can be now definitely visually analyzed.&lt;/p>
+&lt;p>Got it! The sequence of pre-processing steps has deeply enhanced the details of the CT scan contained in the DICOM file. At this point, the image can be definitely visually analyzed.&lt;/p>
 &lt;h2 id="image-export">Image export&lt;/h2>
-&lt;p>As just seen, DICOM files contain not only image data, but also lots of ancillary information. it has also been demonstrated the image may not be immediately usable without some processing. It means DICOM images are not accessible without specific viewers and the image exchange is even more difficult since different viewers may differently process them. A possible solution could be to convert the DICOM file into a standard exchange format, e.g., JPEG or PNG.&lt;/p>
+&lt;p>As already discussed, DICOM files contain not only image data, but also lots of ancillary information. It has also been demonstrated the image may not be immediately usable without some processing. DICOM images are not accessible without specific viewers and the image exchange may be even more difficult since different viewers may differently process the images. A possible solution could be to convert the DICOM file into a standard exchange format, e.g., JPEG or PNG.&lt;/p>
 &lt;p>The starting point is the pre-processed image &lt;code>out&lt;/code>. The first step is to convert pixel data to &lt;code>float&lt;/code> in order to avoid overflow or underflow losses during image scaling.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">new_image&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">out&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">astype&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">float&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Pixel data is currently expressed in Hounsfield units, but it must rescaled into the &lt;code>[0, 255]&lt;/code> interval and then converted to 8 bits unsigned integer.&lt;/p>
@@ -423,7 +423,7 @@ loading="lazy" data-zoomable />&lt;/div>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As a test, it is possible to import and plot the just saved &lt;code>jpg&lt;/code> image.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">img&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">asarray&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Image&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">open&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;dicom.jpg&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">img&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cmap&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cm&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bone&lt;/span>&lt;span class="p">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7efbc4137cd0&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>&amp;lt;matplotlib.image.AxesImage at 0x7f5621a34cd0&amp;gt;
 &lt;/code>&lt;/pre>
 &lt;p>
 &lt;figure >
@@ -504,7 +504,7 @@ ds.DirectoryRecordSequence[0].PatientBirthDate = '19330101'
 (0020, 0011) Series Number IS: '1'
 (0020, 1209) Number of Series Related Instances IS: '1'
 &lt;/code>&lt;/pre>
-&lt;p>The &lt;code>SERIES&lt;/code> record adds details such as the acquisition modality, i.e., &lt;code>CT&lt;/code>, and the examined body part, i.e., &lt;code>ABDOMEN&lt;/code> (refer to &lt;a href="https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_F.5.3.html" target="_blank" rel="noopener">Table F.5-3&lt;/a>).&lt;/p>
+&lt;p>The &lt;code>SERIES&lt;/code> record adds details about the acquisition modality, i.e., &lt;code>CT&lt;/code>, and the examined body part, i.e., &lt;code>ABDOMEN&lt;/code> (refer to &lt;a href="https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_F.5.3.html" target="_blank" rel="noopener">Table F.5-3&lt;/a>).&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ds&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">DirectoryRecordSequence&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">])&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre>&lt;code>(0004, 1400) Offset of the Next Directory Record UL: 0
 (0004, 1410) Record In-use Flag US: 65535
@@ -575,16 +575,16 @@ IMAGE: 143 SOP Instances
 SERIES: Modality=CT, SeriesNumber=604
 IMAGE: 136 SOP Instances
 &lt;/code>&lt;/pre>
-&lt;p>which basically provides a brief summary of the directory records just introduced.&lt;/p>
+&lt;p>which basically provides a brief summary of the directory records previously introduced.&lt;/p>
 &lt;h2 id="conclusions">Conclusions&lt;/h2>
-&lt;p>This post has provided a wide overview about DICOM images in Python in relation to:&lt;/p>
+&lt;p>This post has provided a wide overview of DICOM images in Python in particular about:&lt;/p>
 &lt;ul>
-&lt;li>Data structure&lt;/li>
-&lt;li>Image visualization (and pre-processing)&lt;/li>
-&lt;li>Image export&lt;/li>
-&lt;li>DICOM File-sets and DICOMDIR&lt;/li>
+&lt;li>DICOM data structure&lt;/li>
+&lt;li>DICOM image visualization (and pre-processing)&lt;/li>
+&lt;li>DICOM image export&lt;/li>
+&lt;li>DICOM file-sets and DICOMDIR&lt;/li>
 &lt;/ul>
-&lt;p>The following script summarizes all these concepts since it allows to read a &lt;code>DICOMDIR&lt;/code> file (via the &lt;code>DICOMDIR_PATH&lt;/code> variable) and converts all the SOP instances to JPEG images. The images will be exported following the directory structure &lt;code>{OUTPUT_PATH}/{patient_id}/{study_date}/{series_number}/{instance_number}.jpg&lt;/code>.&lt;/p>
+&lt;p>As a summary, the following script summarizes all the introduced concepts since it allows to read a &lt;code>DICOMDIR&lt;/code> file (via the &lt;code>DICOMDIR_PATH&lt;/code> variable) and convert all the SOP instances to JPEG images. The exported images will be saved to a specific path based on specific metadata, i.e., &lt;code>{OUTPUT_PATH}/{patient_id}/{study_date}/{series_number}/{instance_number}.jpg&lt;/code>.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">os&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">PIL&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Image&lt;/span>
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">numpy&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">np&lt;/span>
