@@ -46,18 +46,18 @@ categories:
 
 ## Introduction
 
-DICOM or Digital Imaging and Communications in medicine are image files sourced from different modalities, e.g., CT or MRI scans, and based on an [international standard](https://www.dicomstandard.org/) to transmit, store, retrieve, print, process, and display medical imaging information. DICOM files does not only contain the image, but also additional data, such as patient identifier, date of birth, age, sex, and any other useful information about the diagnosis. Several DICOM viewers are available online (a list is available [here](https://technologyadvice.com/blog/healthcare/5-dicom-viewers/)), but Python can be very helpful in case additional processing is required. 
+DICOM or Digital Imaging and Communications in medicine are image files sourced from different modalities, e.g., CT or MRI scans, and based on an [international standard](https://www.dicomstandard.org/) to transmit, store, retrieve, print, process, and display medical imaging information. DICOM files do not only contain the image, but also additional data, such as the patient identifier, date of birth, age, sex, and any other useful information about the diagnosis. Obviousely, DICOM files cannot be viewed as normal photos, so several DICOM viewers are available online (a list is available [here](https://technologyadvice.com/blog/healthcare/5-dicom-viewers/)), but, as always, Python can be very powerful in case additional processing is needed. 
 
 ## Pre-requisites
 
-First, the following libraries are needed to import and open DICOM files in Python:
+First, the following libraries are required:
 
 - **[Pydicom](https://pypi.org/project/pydicom/)**: DICOM files reading and decoding library
 - **[Numpy](https://numpy.org/install/)**: Array manipulation library
 - **[Pillow](https://pypi.org/project/Pillow/2.2.2/)**: Image processing library
 - **[Matplotlib](https://matplotlib.org/stable/users/installing/index.html)**: Image visualization library
 
-These libraries can be easily installed via the command:
+and can be easily installed via the command:
 
 ```bash
 pip install pydicom numpy pillow matplotlib
@@ -65,7 +65,7 @@ pip install pydicom numpy pillow matplotlib
 
 ## Data structure
 
-A DICOM file can be read via the [`dcmread()`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.filereader.dcmread.html#pydicom.filereader.dcmread) method, which returns a [`FileDataset`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.FileDataset.html#pydicom.dataset.FileDataset) instance. The `FileDataset` represents an extension of [`Dataset`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.Dataset.html#pydicom.dataset.Dataset) class to make reading and writing to file-like easier and  wraps a dictionary of DICOM [`DataElement`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataelem.DataElement.html#pydicom.dataelem.DataElement) instances:
+Once the Python environment is ready and a DICOM file is available, it can be read via the [`dcmread()`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.filereader.dcmread.html#pydicom.filereader.dcmread) method.
 
 
 ```python
@@ -83,7 +83,7 @@ type(ds)
 
 
 
-A `DataElement` is then composed of the following parts:
+This method returns a [`FileDataset`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.FileDataset.html#pydicom.dataset.FileDataset) instance, which in turn represents an extension of [`Dataset`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.Dataset.html#pydicom.dataset.Dataset) class. It makes reading and writing to file easier and wraps a dictionary of [`DataElement`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataelem.DataElement.html#pydicom.dataelem.DataElement). A `DataElement` is then composed of the following parts:
 
 - a `tag` that identifies the attribute, usually in the format (XXXX,XXXX) with hexadecimal numbers, and may be divided further into DICOM Group Number and DICOM Element Number;
 - a `Value Representation (VR)` that describes the data type and format of the attribute value.
@@ -249,9 +249,9 @@ print(ds)
     (7fe0, 0010) Pixel Data                          OW: Array of 524288 elements
 
 
-You can access specific elements by their DICOM keyword or tag number. When using the tag number directly a `DataElement` instance is returned, so `DataElement.value` must be used to get the value.
+You can access specific elements by their DICOM keyword or tag number. When using the tag number, a `DataElement` instance is returned, so `DataElement.value` must be used to get the value.
 
-> **_NOTE:_**  Some attributes values have been redacted or replace by fake values for privacy.
+> **_NOTE:_**  Some attributes values have been redacted or replaced with fake values for patient privacy.
 
 
 ```python
@@ -277,7 +277,7 @@ ds[0x10,0x10].value
 
 
 
-If you don’t remember or know the exact element tag or keyword, Dataset provides a handy Dataset.dir() method, useful during interactive sessions at the Python prompt. It will return any non-private element keywords in the dataset that have the specified string anywhere in the keyword (case insensitive).
+If you don’t remember or know the exact element tag or keyword, the `Dataset` class provides a handy `dir()` method, useful during interactive sessions at the Python prompt. It will return any non-private element keywords in the dataset that have the specified string anywhere in the keyword (case insensitive).
 
 
 ```python
@@ -420,7 +420,7 @@ DICOM images pixel data is stored as raw bytes in the `DataElement` associated t
 
 - The pixel values may be signed or unsigned integers, or floats
 - There may be multiple image frames
-- There may be multiple planes per frame (i.e. RGB) and the order of the pixels may be different
+- There may be multiple planes per frame (i.e., RGB) and the order of the pixels may be different
 - The image data may be encoded using one of the available compression standards (1.2.840.10008.1.2.4.50 JPEG Baseline, 1.2.840.10008.1.2.5 RLE Lossless, etc). Encoded image data will also be encapsulated and each encapsulated image frame may be broken up into one or more fragments.
 
 Because of the complexity in interpreting the pixel data, pydicom provides an easy way to get it in a convenient form: [`Dataset.pixel_array`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.dataset.Dataset.html#pydicom.dataset.Dataset.pixel_array). As an example, if the pixel data is compressed then `pixel_array` will directly return the uncompressed data.
@@ -436,7 +436,7 @@ plt.imshow(arr, cmap=plt.cm.bone)
 
 
 
-    <matplotlib.image.AxesImage at 0x7efbc6f44280>
+    <matplotlib.image.AxesImage at 0x7f5625845280>
 
 
 
@@ -446,7 +446,7 @@ plt.imshow(arr, cmap=plt.cm.bone)
     
 
 
-As it is possible to see, the picture information content is still quite poor. The following additional DICOM post-processing should be **sequentially** performed in order to enhance the image content.  
+As it is possible to see, the picture details are not well-defined so the information content is quite poor. The following additional DICOM post-processing should be **sequentially** performed in order to enhance the image content.
 
 ### 1. Color Palette
 
@@ -468,11 +468,11 @@ except Exception as e:
     No suitable Palette Color Lookup Table Module found
 
 
-The *Photometric Interpretation* is *MONOCHROME2*, so no suitable Palette Color Lookup Table Module is found and the `apply_color_lut` method fails.
+This was expected since the *Photometric Interpretation* is *MONOCHROME2*, so no suitable Palette Color Lookup Table Module could found and the `apply_color_lut` method fails.
 
 ### 2. Modality LUT or Rescale Operation¶
 
-The DICOM [Modality LUT](http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.html#sect_C.11.1) module converts raw pixel data values to a specific (possibly unitless) physical quantity, such as Hounsfield units for CT. The [`apply_modality_lut()`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut) function can be used with an input array of raw values and a dataset containing a Modality LUT module to return the converted values. When a dataset requires multiple grayscale transformations, the Modality LUT transformation is always applied first.
+The DICOM [Modality LUT](http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.html#sect_C.11.1) module converts raw pixel data values to a specific (possibly unitless) physical quantity, such as Hounsfield units for CT scan (as in this case). The [`apply_modality_lut()`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut) function can be used with an input array of raw values and a dataset containing a Modality LUT module to return the converted values. When a dataset requires multiple grayscale transformations, the Modality LUT transformation is always applied first.
 
 
 ```python
@@ -487,7 +487,7 @@ plt.imshow(hu, cmap=plt.cm.bone)
 
 
 
-    <matplotlib.image.AxesImage at 0x7efbc4445d60>
+    <matplotlib.image.AxesImage at 0x7f5621d45d60>
 
 
 
@@ -527,7 +527,7 @@ np.min(hu), np.max(hu)
 
 ### 3. VOI LUT or Windowing Operation¶
 
-The DICOM [VOI LUT](http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.2.html) module applies a VOI or windowing operation to input values. The [`apply_voi_lut()`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut) function can be used with an input array and a dataset containing a VOI LUT module to return values with applied VOI LUT or windowing. When a dataset contains multiple VOI or windowing views then a particular view can be returned by using the index keyword parameter.
+The DICOM [VOI LUT](http://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_C.11.2.html) module applies a VOI or windowing operation to input values. The [`apply_voi_lut()`](https://pydicom.github.io/pydicom/stable/reference/generated/pydicom.pixel_data_handlers.util.html#pydicom.pixel_data_handlers.util.apply_voi_lut) function can be used with an input array and a dataset containing a VOI LUT module to return values with applied VOI LUT or windowing. When a dataset contains multiple VOI or windowing views then a particular view can be returned by using the index keyword parameter. In this case the index `0` will be used.
 
 When a dataset requires multiple grayscale transformations, then it’s assumed that the modality LUT or rescale operation has already been applied.
 
@@ -542,7 +542,7 @@ plt.imshow(out, cmap=plt.cm.bone)
 
 
 
-    <matplotlib.image.AxesImage at 0x7efbc41b9c40>
+    <matplotlib.image.AxesImage at 0x7f5621ab8c40>
 
 
 
@@ -552,11 +552,11 @@ plt.imshow(out, cmap=plt.cm.bone)
     
 
 
-Got it! The sequence of pre-processing steps has deeply enhanced the details of the CT scan contained in the DICOM file. The image can be now definitely visually analyzed. 
+Got it! The sequence of pre-processing steps has deeply enhanced the details of the CT scan contained in the DICOM file. At this point, the image can be definitely visually analyzed. 
 
 ## Image export
 
-As just seen, DICOM files contain not only image data, but also lots of ancillary information. it has also been demonstrated the image may not be immediately usable without some processing. It means DICOM images are not accessible without specific viewers and the image exchange is even more difficult since different viewers may differently process them. A possible solution could be to convert the DICOM file into a standard exchange format, e.g., JPEG or PNG.
+As already discussed, DICOM files contain not only image data, but also lots of ancillary information. It has also been demonstrated the image may not be immediately usable without some processing. DICOM images are not accessible without specific viewers and the image exchange may be even more difficult since different viewers may differently process the images. A possible solution could be to convert the DICOM file into a standard exchange format, e.g., JPEG or PNG.
 
 The starting point is the pre-processed image `out`. The first step is to convert pixel data to `float` in order to avoid overflow or underflow losses during image scaling.
 
@@ -596,7 +596,7 @@ plt.imshow(img, cmap=plt.cm.bone)
 
 
 
-    <matplotlib.image.AxesImage at 0x7efbc4137cd0>
+    <matplotlib.image.AxesImage at 0x7f5621a34cd0>
 
 
 
@@ -703,7 +703,7 @@ print(ds.DirectoryRecordSequence[2])
     (0020, 1209) Number of Series Related Instances  IS: '1'
 
 
-The `SERIES` record adds details such as the acquisition modality, i.e., `CT`, and the examined body part, i.e., `ABDOMEN` (refer to [Table F.5-3](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_F.5.3.html)).
+The `SERIES` record adds details about the acquisition modality, i.e., `CT`, and the examined body part, i.e., `ABDOMEN` (refer to [Table F.5-3](https://dicom.nema.org/medical/dicom/current/output/chtml/part03/sect_F.5.3.html)).
 
 
 ```python
@@ -798,18 +798,18 @@ print(fs)
               IMAGE: 136 SOP Instances
 
 
-which basically provides a brief summary of the directory records just introduced.
+which basically provides a brief summary of the directory records previously introduced.
 
 ## Conclusions
 
-This post has provided a wide overview about DICOM images in Python in relation to:
+This post has provided a wide overview of DICOM images in Python in particular about:
 
-- Data structure
-- Image visualization (and pre-processing)
-- Image export
-- DICOM File-sets and DICOMDIR
+- DICOM data structure
+- DICOM image visualization (and pre-processing)
+- DICOM image export
+- DICOM file-sets and DICOMDIR
 
-The following script summarizes all these concepts since it allows to read a `DICOMDIR` file (via the `DICOMDIR_PATH` variable) and converts all the SOP instances to JPEG images. The images will be exported following the directory structure `{OUTPUT_PATH}/{patient_id}/{study_date}/{series_number}/{instance_number}.jpg`. 
+As a summary, the following script summarizes all the introduced concepts since it allows to read a `DICOMDIR` file (via the `DICOMDIR_PATH` variable) and convert all the SOP instances to JPEG images. The exported images will be saved to a specific path based on specific metadata, i.e., `{OUTPUT_PATH}/{patient_id}/{study_date}/{series_number}/{instance_number}.jpg`. 
 
 
 ```python
