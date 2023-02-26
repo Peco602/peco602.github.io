@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Medical | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/medical/</link><atom:link href="https://www.peco602.com/tag/medical/index.xml" rel="self" type="application/rss+xml"/><description>Medical</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 29 Sep 2022 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Medical</title><link>https://www.peco602.com/tag/medical/</link></image><item><title>DICOM images in Python: An overview</title><link>https://www.peco602.com/post/0090-python-dicom/</link><pubDate>Thu, 29 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0090-python-dicom/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Medical | Giovanni Pecoraro</title><link>https://www.peco602.com/tag/medical/</link><atom:link href="https://www.peco602.com/tag/medical/index.xml" rel="self" type="application/rss+xml"/><description>Medical</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 23 Feb 2023 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Medical</title><link>https://www.peco602.com/tag/medical/</link></image><item><title>DICOM images in Python: An overview</title><link>https://www.peco602.com/post/0090-python-dicom/</link><pubDate>Thu, 23 Feb 2023 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0090-python-dicom/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>DICOM or Digital Imaging and Communications in medicine are image files sourced from different modalities, e.g., CT or MRI scans, and based on an &lt;a href="https://www.dicomstandard.org/" target="_blank" rel="noopener">international standard&lt;/a> to transmit, store, retrieve, print, process, and display medical imaging information. DICOM files do not only contain the image, but also additional data, such as the patient identifier, date of birth, age, sex, and any other useful information about the diagnosis. Obviousely, DICOM files cannot be viewed as normal photos, so several DICOM viewers are available online (a list is available &lt;a href="https://technologyadvice.com/blog/healthcare/5-dicom-viewers/" target="_blank" rel="noopener">here&lt;/a>), but, as always, Python can be very powerful in case additional processing is needed.&lt;/p>
 &lt;h2 id="pre-requisites">Pre-requisites&lt;/h2>
 &lt;p>First, the following libraries are required:&lt;/p>
@@ -644,4 +644,253 @@ IMAGE: 136 SOP Instances
 &lt;li>&lt;a href="https://medium.com/analytics-vidhya/dicom-and-deep-learning-63373e99d79a" target="_blank" rel="noopener">Extract DICOM Images Only for Deep Learning | by Nawaf Alageel | Analytics Vidhya | Medium&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://mscipio.github.io/post/read_dicom_files_in_python/" target="_blank" rel="noopener">How to read DICOM files into Python | MICHELE SCIPIONI (mscipio.github.io)&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://pycad.co/how-to-convert-a-dicom-image-into-jpg-or-png/" target="_blank" rel="noopener">How To Convert a DICOM Image Into JPG or PNG - PYCAD&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;/ul></description></item><item><title>Maternal Health Risk Predictor</title><link>https://www.peco602.com/project/0040-maternal-health-mlops/</link><pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0040-maternal-health-mlops/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>According to the World Health Organization (WHO):&lt;/p>
+&lt;p>&amp;ldquo;&lt;em>Maternal health refers to the health of women during pregnancy, childbirth and the post-natal period. Each stage should be a positive experience, ensuring women and their babies reach their full potential for health and well-being. Although important progress has been made in the last two decades, about 295 000 women died during and following pregnancy and childbirth in 2017. This number is unacceptably high. The most common direct causes of maternal injury and death are excessive blood loss, infection, high blood pressure, unsafe abortion, and obstructed labour, as well as indirect causes such as anemia, malaria, and heart disease. Most maternal deaths are preventable with timely management by a skilled health professional working in a supportive environment. Ending preventable maternal death must remain at the top of the global agenda. At the same time, simply surviving pregnancy and childbirth can never be the marker of successful maternal health care. It is critical to expand efforts reducing maternal injury and disability to promote health and well-being. Every pregnancy and birth is unique. Addressing inequalities that affect health outcomes, especially sexual and reproductive health and rights and gender, is fundamental to ensuring all women have access to respectful and high-quality maternity care.&lt;/em>&amp;rdquo;&lt;/p>
+&lt;p>The goal of the project is to apply what has been learned during the MLOps Zoomcamp course to build a MLOps pipeline for woman health risk prediction during pregnancy.&lt;/p>
+&lt;h2 id="dataset">Dataset&lt;/h2>
+&lt;p>The dataset used to feed the MLOps pipeline has been downloaded from &lt;a href="https://www.kaggle.com/datasets/pyuxbhatt/maternal-health-risk" target="_blank" rel="noopener">Kaggle&lt;/a> and contains data collected from several hospitals, community clinics and maternal health cares through an IoT-based risk monitoring system. The dataset is updated daily and is characterized by the following features:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Feature&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Age&lt;/td>
+&lt;td>Age when a woman is pregnant.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SystolicBP&lt;/td>
+&lt;td>Upper value of blood pressure.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DiastolicBP&lt;/td>
+&lt;td>Lower value of blood pressure.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BS&lt;/td>
+&lt;td>Blood glucose levels in terms of molar concentration.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>HeartRate&lt;/td>
+&lt;td>A normal resting heart rate.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BodyTemp&lt;/td>
+&lt;td>Average human body temperature.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Risk Level&lt;/td>
+&lt;td>Predicted risk intensity level during pregnancy considering the previous attributes.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="mlops-pipeline">MLOps pipeline&lt;/h2>
+&lt;h3 id="architecture">Architecture&lt;/h3>
+&lt;img src="./architecture.png" width="100%"/>
+&lt;h3 id="deployment">Deployment&lt;/h3>
+&lt;p>The MLOps pipeline is fully dockerised and can be easily deployed via the following steps:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Clone the &lt;code>maternal-health-risk&lt;/code> repository locally:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ git clone https://github.com/Peco602/maternal-health-risk.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Install the pre-requisites necessary to run the pipeline:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ &lt;span class="nb">cd&lt;/span> maternal-health-risk
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ sudo apt install make
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ make prerequisites
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It is also suggested to add the current user to the &lt;code>docker&lt;/code> group to avoid running the next steps as &lt;code>sudo&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ sudo groupadd docker
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">$ sudo usermod -aG docker &lt;span class="nv">$USER&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>then, logout and log back in so that the group membership is re-evaluated.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>[&lt;em>Optional&lt;/em>] Configure the development evironment:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ make setup
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This is required to perform further development and testing on the pipeline.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>[&lt;em>Optional&lt;/em>] Insert Kaggle credentials in the &lt;code>.env&lt;/code> file to allow the automatic scheduled dataset update:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Kaggle credentials&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">KAGGLE_USERNAME&lt;/span>&lt;span class="o">=&lt;/span>*****
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nv">KAGGLE_KEY&lt;/span>&lt;span class="o">=&lt;/span>*****
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In case the credentials are not available, the training dataset &lt;code>data/data.csv&lt;/code> must be updated manually.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Pull the Docker images:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make pull
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;/li>
+&lt;li>
+&lt;p>Launch the MLOps pipeline:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make run
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once ready, the following services will be available:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Service&lt;/th>
+&lt;th>Port&lt;/th>
+&lt;th>Interface&lt;/th>
+&lt;th>Description&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Web Application&lt;/td>
+&lt;td>80&lt;/td>
+&lt;td>0.0.0.0&lt;/td>
+&lt;td>Prediction web service (see picture below)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Prefect&lt;/td>
+&lt;td>4200&lt;/td>
+&lt;td>127.0.0.1&lt;/td>
+&lt;td>Training workflow orchestration&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MLFlow&lt;/td>
+&lt;td>5000&lt;/td>
+&lt;td>127.0.0.1&lt;/td>
+&lt;td>Experiment tracking and model registry&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MinIO&lt;/td>
+&lt;td>9001&lt;/td>
+&lt;td>127.0.0.1&lt;/td>
+&lt;td>S3-equivalent bucket management&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Evidently&lt;/td>
+&lt;td>8085&lt;/td>
+&lt;td>127.0.0.1&lt;/td>
+&lt;td>Data and target drift report generation (&lt;code>/dashboard&lt;/code> route)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Grafana&lt;/td>
+&lt;td>3000&lt;/td>
+&lt;td>127.0.0.1&lt;/td>
+&lt;td>Data and target drift real-time dashboards&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;img src="./webservice.png" width="100%"/>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="training">Training&lt;/h3>
+&lt;p>Once the MLOps pipeline has been started, the prediction web service can already work thanks to a default pre-trained model available in the Docker image. In order to enable pipeline training workflow it is necessary to create a scheduled Prefect deployment via:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make deployment
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The training workflow will be then automatically executed every day. It will download the latest dataset (if the Kaggle credentials have been provided), search the best model in terms of accuracy among XGBoost, Support Vector Machine and Random Forest and finally will store it in the model registry. It is worth noting the training workflow can also be immediately executed without waiting the next schedule:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make train
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the updated model is ready, it can be moved to production by restarting the pipeline:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make restart
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>the web service will automatically connect to the registry and get the most updated model. If the model is still not available, it will continue to use the default one.&lt;/p>
+&lt;h3 id="monitoring">Monitoring&lt;/h3>
+&lt;p>It is possible to generate simulated traffic via:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make generate-traffic
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, the prediction service can be monitored via:&lt;/p>
+&lt;ul>
+&lt;li>Grafana (in real-time): &lt;code>http://127.0.0.1:3000&lt;/code>&lt;/li>
+&lt;li>Evidently (for report generation): &lt;code>http://127.0.0.1:8085/dashboard&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="disposal">Disposal&lt;/h3>
+&lt;p>The MLOps pipeline can be disposed via:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make kill
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>while the Docker volumes used for persistence can be removed via:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">$ make clean
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="github-actions">GitHub Actions&lt;/h2>
+&lt;ul>
+&lt;li>&lt;strong>Continuous Integration&lt;/strong>: On every push and pull request on &lt;code>main&lt;/code> and &lt;code>dev&lt;/code> branches, the Docker images are built, tested and then pushed to DockerHub.&lt;/li>
+&lt;li>&lt;strong>Continuous Deployment&lt;/strong>: On every push and pull request on &lt;code>main&lt;/code> branch, only if the Continuous Integration workflow has been successful successful, the updated pipeline is deployed to the target server and run.&lt;/li>
+&lt;/ul>
+&lt;h2 id="applied-technologies">Applied technologies&lt;/h2>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Name&lt;/th>
+&lt;th>Scope&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Jupyter Notebooks&lt;/td>
+&lt;td>Exploratory data analysis and pipeline prototyping.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Docker&lt;/td>
+&lt;td>Application containerization.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Docker-Compose&lt;/td>
+&lt;td>Multi-container Docker applications definition and running.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Prefect&lt;/td>
+&lt;td>Workflow orchestration.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MLFlow&lt;/td>
+&lt;td>Experiment tracking and model registry.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>PostgreSQL&lt;/td>
+&lt;td>MLFLow experiment tracking database.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MinIO&lt;/td>
+&lt;td>High Performance Object Storage compatible with Amazon S3 cloud storage service.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Flask&lt;/td>
+&lt;td>Web server.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Bootstrap&lt;/td>
+&lt;td>Frontend toolkit.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MongoDB&lt;/td>
+&lt;td>Prediction database.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>EvidentlyAI&lt;/td>
+&lt;td>ML models evaluation and monitoring.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Prometheus&lt;/td>
+&lt;td>Time Series Database for ML models real-time monitoring.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Grafana&lt;/td>
+&lt;td>ML models real-time monitoring dashboards.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>pytest&lt;/td>
+&lt;td>Python unit testing suite.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>pylint&lt;/td>
+&lt;td>Python static code analysis.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>black&lt;/td>
+&lt;td>Python code formatting.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>isort&lt;/td>
+&lt;td>Python import sorting.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Pre-Commit Hooks&lt;/td>
+&lt;td>Simple code issue identification before submission.&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GitHub Actions&lt;/td>
+&lt;td>CI/CD pipelines.&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="disclaimer">Disclaimer&lt;/h2>
+&lt;p>This prediction service has been developed as the final project of the MLOps Zoomcamp course from DataTalks.Club. It does not provide medical advice and it is intended for informational purposes only. It cannot be considered a substitute for professional medical advice, diagnosis or treatment. Never ignore professional medical advice in seeking treatment because of something you have read here.&lt;/p></description></item></channel></rss>
