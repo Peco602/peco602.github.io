@@ -9,10 +9,10 @@ summary: A key step towards the application of Deep Learning to medical images i
 projects: []
 
 # Date published
-date: '2022-09-29T00:00:00Z'
+date: '2023-02-23T00:00:00Z'
 
 # Date updated
-lastmod: '2022-09-29T00:00:00Z'
+lastmod: '2023-02-23T00:00:00Z'
 
 # Is this an unpublished draft?
 draft: false
@@ -40,6 +40,7 @@ tags:
   
 categories:
   - Deep Learning
+  - Medical
   - Python
 
 ---
