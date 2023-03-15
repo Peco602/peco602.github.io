@@ -1,4 +1,49 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link><atom:link href="https://www.peco602.com/index.xml" rel="self" type="application/rss+xml"/><description>Giovanni Pecoraro</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Thu, 23 Feb 2023 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link></image><item><title>DICOM images in Python: An overview</title><link>https://www.peco602.com/post/0090-python-dicom/</link><pubDate>Thu, 23 Feb 2023 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0090-python-dicom/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link><atom:link href="https://www.peco602.com/index.xml" rel="self" type="application/rss+xml"/><description>Giovanni Pecoraro</description><generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><lastBuildDate>Wed, 15 Mar 2023 00:00:00 +0000</lastBuildDate><image><url>https://www.peco602.com/media/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_3.png</url><title>Giovanni Pecoraro</title><link>https://www.peco602.com/</link></image><item><title>Archive-To-Images</title><link>https://www.peco602.com/project/0050-archive-to-images/</link><pubDate>Wed, 15 Mar 2023 00:00:00 +0000</pubDate><guid>https://www.peco602.com/project/0050-archive-to-images/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>Since some cloud providers offer free unlimited picture-only storage, the &lt;strong>Archive-To-Images&lt;/strong> library allows to convert any collection of files into pictures to be uploaded without any additional cost.&lt;/p>
+&lt;h2 id="installation">Installation&lt;/h2>
+&lt;p>The package can be easily installed via &lt;code>pip&lt;/code> package manager:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ pip install archive-to-images
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="usage-as-cli">Usage as CLI&lt;/h2>
+&lt;h3 id="transform-to-images">Transform to images&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ archive-to-images transform --help
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Usage: archive-to-images transform &lt;span class="o">[&lt;/span>OPTIONS&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Transforms an archive into multiple images.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ * --path -p TEXT Path containing data to be archived. &lt;span class="o">[&lt;/span>default: None&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>required&lt;span class="o">]&lt;/span> │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ * --name -n TEXT Name of the archive. &lt;span class="o">[&lt;/span>default: None&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>required&lt;span class="o">]&lt;/span> │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ --size -s &lt;span class="o">[&lt;/span>0.5&lt;span class="p">|&lt;/span>1&lt;span class="p">|&lt;/span>2&lt;span class="p">|&lt;/span>5&lt;span class="p">|&lt;/span>10&lt;span class="o">]&lt;/span> Maximum size of an image in MB. &lt;span class="o">[&lt;/span>default: 1&lt;span class="o">]&lt;/span> │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ --encrypt -e Protect archive with password. │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ --verbose -v Enable verbose output. │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ --help Show this message and exit. │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create an image collection from data contained in multiple paths.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ archive-to-images transform --path /home/alice/Desktop --path /home/alice/Documents --name ARCHIVE_ALICE
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Set the maximum image size in MB (default: 1):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ archive-to-images transform --path /home/alice/Desktop --path /home/alice/Documents --name ARCHIVE_ALICE -s &lt;span class="m">5&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Encrypt data with a password:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ archive-to-images transform --path /home/alice/Desktop --path /home/alice/Documents --name ARCHIVE_ALICE -s &lt;span class="m">5&lt;/span> -e
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="restore-from-images">Restore from images&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ archive-to-images restore --help
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Usage: archive-to-images restore &lt;span class="o">[&lt;/span>OPTIONS&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Restores an archive from multiple images.
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ * --path -p TEXT Path containing images to be processed. &lt;span class="o">[&lt;/span>default: None&lt;span class="o">]&lt;/span> &lt;span class="o">[&lt;/span>required&lt;span class="o">]&lt;/span> │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ --verbose -v Enable verbose output. │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│ --help Show this message and exit. │
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Restore the archives stored in image collections:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ archive-to-images restore --path /home/alice/Downloads/Album1 --path /home/alice/Downloads/Album2
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The library will automatically find all the archives stored in the images and will output a &lt;code>zip&lt;/code> archive for each one.&lt;/p>
+&lt;h2 id="usage-as-docker">Usage as docker&lt;/h2>
+&lt;p>Run the docker image and bind the current folder to the &lt;code>workspace&lt;/code> path inside the container:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">$ docker run -it --rm -v &lt;span class="k">$(&lt;/span>&lt;span class="nb">pwd&lt;/span>&lt;span class="k">)&lt;/span>:/workspace peco602/archive_to_images:latest bash
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>then it is possible to use the CLI directly from the container bash.&lt;/p></description></item><item><title>DICOM images in Python: An overview</title><link>https://www.peco602.com/post/0090-python-dicom/</link><pubDate>Thu, 23 Feb 2023 00:00:00 +0000</pubDate><guid>https://www.peco602.com/post/0090-python-dicom/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>DICOM or Digital Imaging and Communications in medicine are image files sourced from different modalities, e.g., CT or MRI scans, and based on an &lt;a href="https://www.dicomstandard.org/" target="_blank" rel="noopener">international standard&lt;/a> to transmit, store, retrieve, print, process, and display medical imaging information. DICOM files do not only contain the image, but also additional data, such as the patient identifier, date of birth, age, sex, and any other useful information about the diagnosis. Obviousely, DICOM files cannot be viewed as normal photos, so several DICOM viewers are available online (a list is available &lt;a href="https://technologyadvice.com/blog/healthcare/5-dicom-viewers/" target="_blank" rel="noopener">here&lt;/a>), but, as always, Python can be very powerful in case additional processing is needed.&lt;/p>
 &lt;h2 id="pre-requisites">Pre-requisites&lt;/h2>
 &lt;p>First, the following libraries are required:&lt;/p>
