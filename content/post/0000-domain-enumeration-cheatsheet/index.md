@@ -40,7 +40,8 @@ tags:
 
 categories:
   - Cyber Security
-  
+  - Red Teaming
+
 ---
 
 ## Module Import

@@ -39,6 +39,7 @@ tags:
   
 categories:
   - Cyber Security
+  - Red Teaming
 
 ---
 
