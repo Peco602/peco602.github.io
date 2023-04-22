@@ -1,0 +1,7 @@
+// CSS for scrollable code output
+.scrollable-code-output .highlight .chroma {
+    max-height: 1000px;
+    overflow-y: auto;
+    background-color: #23252f !important;
+    border-color: #23252f !important;
+}
